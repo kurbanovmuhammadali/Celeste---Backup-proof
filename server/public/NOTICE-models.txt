@@ -1,0 +1,6 @@
+Open-source components bundled so HMSC works offline (nothing is downloaded at run time):
+- face-api.js (vladmandic fork) .......... MIT          public/vendor/face-api.js, public/models/*face*  (face detection, landmarks, recognition)
+- MediaPipe Tasks Vision 0.10.14 ......... Apache-2.0   public/vendor/mediapipe/*                         (runtime)
+- MediaPipe Pose Landmarker (full, heavy)  Apache-2.0   public/models/mediapipe/pose_landmarker_*.task    (body pose for exercise, eating, incident detection)
+- MediaPipe EfficientDet-Lite0 ........... Apache-2.0   public/models/mediapipe/efficientdet_lite0.tflite (object detection for the activity report)
+No model was trained for HMSC.

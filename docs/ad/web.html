@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Celeste Intro 16:9</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<!--
+  Celeste intro, 16:9 for Mac / laptops (1920×1080). The phone film (celeste.html) plays frame-exact inside an
+  iPhone on the right; the left side tells the mission story in large type, synced to the film's scenes, and the
+  five NASA spaceflight hazards light up one by one. Exposes window.D / window.render(t) / window.ready for render.mjs.
+-->
+<style>
+  :root { --ink:#2B1E18; --ink2:#6E5A50; --ink3:#A8958B; --copper:#B8693F; --copperDeep:#8E4A2A; --copperSoft:#E3B79E; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; background: #F8EEE8; overflow: hidden; }
+  body { font-family: Geist, system-ui, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+  #stage { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden; transform-origin: 0 0;
+    background: radial-gradient(70% 90% at 12% 10%, #FCF6F2 0%, rgba(252,246,242,0) 60%), linear-gradient(120deg, #FBF3EE 0%, #F6E6DC 45%, #EED3C3 100%); }
+  .abs { position: absolute; }
+  #mars { left: 1430px; top: 640px; width: 760px; height: 760px; filter: drop-shadow(0 0 60px rgba(238,143,106,.45)); }
+  #glow { left: 1060px; top: 80px; width: 640px; height: 640px; border-radius: 50%; background: radial-gradient(closest-side, rgba(238,143,106,.38), rgba(238,143,106,0)); }
+  #phone { left: 1118px; top: 70px; width: 540px; height: 940px; border-radius: 92px; background: #1a1411; padding: 15px;
+    box-shadow: 0 70px 120px -50px rgba(60,30,15,.75), inset 0 0 0 3px #4a3a31; }
+  #screen { position: relative; width: 510px; height: 910px; border-radius: 78px; overflow: hidden; background: #F8EEE8; }
+  #film { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; border: 0; transform-origin: 0 0; transform: scale(.4723); }
+  #logo { left: 150px; top: 120px; display: flex; align-items: center; gap: 12px; font-weight: 600; letter-spacing: 5px; font-size: 26px; }
+  #kicker { left: 150px; top: 330px; font-family: "Geist Mono", monospace; font-size: 18px; letter-spacing: 3px; color: var(--copper); text-transform: uppercase; }
+  .line { left: 150px; top: 380px; width: 860px; font-size: 96px; line-height: 1.02; font-weight: 600; letter-spacing: -3.5px; }
+  .line em { font-style: normal; color: var(--copper); }
+  .sub { left: 152px; top: 620px; width: 760px; font-size: 30px; line-height: 1.35; color: var(--ink2); }
+  #hz { left: 150px; top: 820px; display: flex; gap: 14px; }
+  .h { width: 150px; height: 112px; border-radius: 26px; background: rgba(255,253,251,.82); border: 1.5px solid rgba(142,74,42,.14); padding: 16px 16px; }
+  .h b { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; border: 3px solid #E3CFC2; font-size: 19px; }
+  .h span { display: block; font-size: 17px; color: var(--ink2); margin-top: 10px; }
+  #hzk { left: 152px; top: 784px; font-family: "Geist Mono", monospace; font-size: 15px; letter-spacing: 2.5px; color: var(--ink3); text-transform: uppercase; }
+  #ui { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); display: flex; gap: 10px; align-items: center; background: #fff; padding: 8px 12px; border-radius: 14px; font: 13px Geist; box-shadow: 0 8px 20px rgba(0,0,0,.12); }
+</style>
+</head>
+<body>
+<div id="stage">
+  <img id="mars" class="abs" src="assets/space-mars.png" alt="">
+  <div id="glow" class="abs"></div>
+  <div id="logo" class="abs"><svg width="30" height="30" viewBox="0 0 24 24"><path fill="#B8693F" d="M12 1.5C12.9 8 16 11.1 22.5 12 16 12.9 12.9 16 12 22.5 11.1 16 8 12.9 1.5 12 8 11.1 11.1 8 12 1.5Z"/></svg>CELESTE</div>
+  <div id="kicker" class="abs">Crew health for long missions</div>
+  <div id="lines"></div>
+  <div id="hzk" class="abs">NASA's five spaceflight hazards</div>
+  <div id="hz" class="abs"></div>
+  <div id="phone" class="abs"><div id="screen"><iframe id="film" title="Celeste film"></iframe></div></div>
+</div>
+<div id="ui"><button id="play">Play</button><input id="scrub" type="range" min="0" step="0.01" style="width:420px"><span id="time">0.00s</span></div>
+<script>
+const EXPORT = location.search.includes('export');
+const D = 18.75;            // same cut as the phone intro in the app
+const SPEED = 1.13;          // the film's authored-time multiplier
+const $ = id => document.getElementById(id);
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out = x => 1 - Math.pow(1 - x, 4);
+const inOut = x => x < .5 ? 8 * x ** 4 : 1 - Math.pow(-2 * x + 2, 4) / 2;
+
+// headline per film scene (authored film time a..b); left side complements the phone, never repeats it word for word
+const LINES = [
+  { a: 0,     b: 4.45,  k: 'Crew health for long missions', h: 'Your crew health<br><em>companion.</em>', s: 'Built for astronauts who are months away from the nearest clinic.' },
+  { a: 4.45,  b: 8.85,  k: 'One place for every signal', h: 'Wearables, labs<br>and <em>dosimeters.</em>', s: 'WHOOP, Apple Watch, manual checks and radiation dose, each with its source.' },
+  { a: 8.85,  b: 12.55, k: 'Against your own baseline', h: 'See changes<br><em>early.</em>', s: 'Sleep, heart, bone and mood compared only with you — never with someone else.' },
+  { a: 12.55, b: 16.45, k: 'Explained, then acted on', h: 'One clear<br><em>next step.</em>', s: 'An adaptive plan every day, and a flight-surgeon report that waits for the comms window.' },
+  { a: 16.45, b: 19.75, k: 'Track · Understand · Act', h: 'Self-care for<br><em>deep space.</em>', s: 'Works offline. Every number says how fresh it is.' },
+  { a: 19.75, b: 99,    k: 'Celeste', h: 'Care beyond<br><em>Earth.</em>', s: 'Mars · Moon · Jupiter · Earth orbit' },
+];
+const HZ = [['R', 'Radiation'], ['I', 'Isolation'], ['D', 'Distance'], ['G', 'Gravity'], ['E', 'Environment']];
+const HZC = ['#D69A3F', '#D69A3F', '#5C93D6', '#C9553B', '#5C9A6E'];
+
+LINES.forEach((l, i) => {
+  l.el = document.createElement('div');
+  l.el.innerHTML = `<div class="abs line">${l.h}</div><div class="abs sub">${l.s}</div>`;
+  l.el.style.cssText = 'position:absolute;inset:0;opacity:0';
+  $('lines').appendChild(l.el);
+});
+const hz = HZ.map(([k, n]) => { const d = document.createElement('div'); d.className = 'h'; d.innerHTML = `<b>${k}</b><span>${n}</span>`; $('hz').appendChild(d); return d; });
+
+const film = $('film');
+const filmReady = new Promise(res => { film.onload = () => { const w = film.contentWindow; Promise.resolve(w.ready).then(res); }; });
+film.src = 'celeste.html?export';
+
+function render(t) {
+  const ft = t * SPEED; // film's authored time
+  film.contentWindow.render && film.contentWindow.render(t);
+  // headline crossfades with a rise + blur
+  for (const l of LINES) {
+    const a = l.a + (l.a ? 0.15 : 0.25), inn = out(p(ft, a, a + 0.9)), gone = inOut(p(ft, l.b - 0.1, l.b + 0.35));
+    const o = inn * (1 - gone);
+    l.el.style.opacity = o;
+    l.el.style.transform = `translateY(${(1 - inn) * 46 - gone * 24}px)`;
+    l.el.style.filter = `blur(${(1 - inn) * 14 + gone * 10}px)`;
+  }
+  $('kicker').textContent = (LINES.find(l => ft >= l.a && ft < l.b) || LINES[0]).k;
+  $('kicker').style.opacity = 0.35 + 0.65 * out(p(ft % 99, 0.2, 1));
+  // hazards light up one by one, then stay lit
+  hz.forEach((d, i) => {
+    const on = out(p(ft, 1.2 + i * 0.35, 1.9 + i * 0.35)), lit = out(p(ft, 9 + i * 0.45, 9.8 + i * 0.45));
+    d.style.opacity = on; d.style.transform = `translateY(${(1 - on) * 30}px)`;
+    d.firstChild.style.borderColor = lit > 0 ? HZC[i] : '#E3CFC2';
+    d.firstChild.style.boxShadow = `0 0 0 ${lit * 6}px ${HZC[i]}22`;
+  });
+  // phone floats and turns very slightly; Mars drifts
+  const ph = out(p(ft, 0, 1.4));
+  $('phone').style.transform = `translateY(${(1 - ph) * 120 + Math.sin(t * 0.9) * 8}px) rotate(${Math.sin(t * 0.5) * 0.8 - (1 - ph) * 4}deg)`;
+  $('phone').style.opacity = ph;
+  $('mars').style.transform = `translate(${-t * 4}px, ${-t * 3}px) rotate(${t * 0.6}deg)`;
+  $('glow').style.opacity = 0.6 + 0.4 * Math.sin(t * 1.3);
+  const end = out(p(ft, 19.75, 20.6)); // final card: phone eases right, Mars rises
+  $('mars').style.top = 640 - end * 90 + 'px';
+}
+
+window.D = D; window.render = render;
+window.ready = Promise.all([document.fonts.ready, filmReady, ...[...document.images].map(i => i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }))]);
+
+// preview controls
+const fit = () => { const s = Math.min(innerWidth / 1920, innerHeight / 1080); $('stage').style.transform = `scale(${s})`; };
+if (EXPORT) { $('ui').remove(); window.ready.then(() => render(0)); }
+else {
+  fit(); addEventListener('resize', fit);
+  let t = 0, playing = true, last = 0; $('scrub').max = D;
+  $('play').onclick = () => { playing = !playing; };
+  $('scrub').oninput = e => { t = +e.target.value; playing = false; };
+  window.ready.then(() => requestAnimationFrame(function loop(n) {
+    if (playing) { t += Math.min(0.05, (n - last) / 1000); if (t >= D) t = 0; }
+    last = n; render(t); $('scrub').value = t; $('time').textContent = t.toFixed(2) + 's'; requestAnimationFrame(loop);
+  }));
+}
+</script>
+</body>
+</html>

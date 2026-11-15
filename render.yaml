@@ -1,0 +1,36 @@
+# Render Blueprint: one web service serves the API and the built web app (server/public, committed).
+# Secrets are NOT stored here: Render asks for them in the dashboard (sync: false).
+services:
+  - type: web
+    name: celeste
+    runtime: node
+    plan: free            # free wipes the SQLite file on restart; use a paid plan + disk at /opt/render/project/src/server/data for real use
+    rootDir: server
+    buildCommand: npm ci --omit=dev
+    startCommand: node src/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      - key: NODE_ENV
+        value: production
+      - key: TOKEN_ENC_KEY
+        generateValue: true
+      - key: APP_URL
+        value: https://celestasoft.health
+      - key: WHOOP_REDIRECT_URI
+        value: https://celestasoft.health/api/integrations/whoop/callback
+      - key: EMAIL_VERIFICATION
+        value: "on"
+      - key: WHOOP_CLIENT_ID
+        sync: false
+      - key: WHOOP_CLIENT_SECRET
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ADMIN_EMAILS
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false

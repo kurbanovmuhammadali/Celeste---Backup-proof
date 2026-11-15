@@ -1,0 +1,21 @@
+[Unit]
+Description=HMSC server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=hmsc
+WorkingDirectory=/opt/hmsc/server
+ExecStart=/usr/bin/node --env-file=/opt/hmsc/server/.env src/index.js
+Restart=always
+RestartSec=3
+# the server only listens locally behind Caddy; it can write only to its data folder
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/hmsc/server/data
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

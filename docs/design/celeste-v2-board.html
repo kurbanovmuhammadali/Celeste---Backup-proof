@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Celeste v2 Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --canvas:#F7EEE8; --card:#FFFDFB; --sunk:#F6E7DE; --hair:rgba(142,74,42,.12); --hair2:rgba(142,74,42,.2);
+    --ink:#2B1E18; --ink2:#6E5A50; --ink3:#A8958B; --copper:#B8693F; --copperDeep:#8E4A2A; --copperSoft:#E3B79E; --tint:#F6E4D9;
+    --ok:#5C9A6E; --okT:#E4F0E6; --watch:#D69A3F; --watchT:#F8EBD3; --flag:#C9553B; --flagT:#F8DFD8; --space:#1C120D;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Geist,system-ui,sans-serif;background:#EDE3DC;color:var(--ink);-webkit-font-smoothing:antialiased}
+  .mono{font-family:"Geist Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase}
+  header.top{padding:56px 64px 28px;display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap}
+  header.top h1{font-size:46px;font-weight:600;letter-spacing:-.035em;line-height:1.02}
+  header.top h1 span{color:var(--copper)}
+  header.top p{max-width:620px;color:var(--ink2);font-size:16px;line-height:1.5;margin-top:12px}
+  .principles{display:flex;gap:10px;flex-wrap:wrap;max-width:560px}
+  .principles div{background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:10px 12px;font-size:12.5px;color:var(--ink2);width:178px}
+  .principles b{display:block;color:var(--ink);font-weight:600;font-size:13px;margin-bottom:2px}
+  .rail{display:flex;gap:36px;padding:16px 64px 40px;overflow-x:auto;align-items:flex-start}
+  .shot{flex:0 0 auto}
+  .shot .cap{width:340px;margin-bottom:14px}
+  .shot .cap .n{font-size:11px;color:var(--copper)}
+  .shot .cap h3{font-size:18px;font-weight:600;letter-spacing:-.02em;margin-top:2px}
+  .shot .cap p{font-size:12.5px;color:var(--ink2);line-height:1.45;margin-top:4px}
+  .shot .cap .feat{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+  .shot .cap .feat span{font-size:10.5px;background:rgba(184,105,63,.1);color:var(--copperDeep);border-radius:999px;padding:3px 8px}
+  .phone{width:340px;height:736px;border-radius:52px;background:#1d1411;padding:9px;box-shadow:0 30px 60px -30px rgba(80,40,20,.55)}
+  .scr{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:linear-gradient(180deg,#FBF5F1,#F7EEE8 50%,#F2E1D6)}
+  .scr.dark{background:linear-gradient(180deg,#2A1A14,#1C120D)}
+  .island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:100px;height:28px;border-radius:20px;background:#000;z-index:5}
+  .sb{height:46px;display:flex;justify-content:space-between;align-items:center;padding:0 26px;font-size:13px;font-weight:600}
+  .body{padding:4px 16px 0}
+  .row{display:flex;align-items:center;gap:8px}
+  .between{display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:600;letter-spacing:.09em;font-size:14px;display:flex;align-items:center;gap:6px}
+  .logo i{color:var(--copper);font-style:normal}
+  .pill{font-size:11px;font-weight:500;border:1px solid var(--hair2);background:var(--card);border-radius:999px;padding:4px 9px;display:inline-flex;gap:5px;align-items:center}
+  .sos{background:var(--flag);color:#fff;border:0;font-weight:600}
+  .card{background:var(--card);border:1px solid var(--hair);border-radius:18px;padding:12px;box-shadow:0 10px 24px -16px rgba(110,55,25,.3)}
+  .sunk{background:var(--sunk);border-radius:14px;padding:10px}
+  h4{font-size:15px;font-weight:600;letter-spacing:-.015em}
+  .k{font-size:9.5px;color:var(--ink3)}
+  .cap2{font-size:11px;color:var(--ink2);line-height:1.4}
+  .dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+  .ok{background:var(--ok)} .watch{background:var(--watch)} .flag{background:var(--flag)} .none{background:#CDBDB3}
+  .src{font-family:"Geist Mono",monospace;font-size:8.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink3);display:inline-flex;align-items:center;gap:4px}
+  .fresh{width:5px;height:5px;border-radius:50%}
+  .btn{background:var(--copper);color:#fff;border-radius:999px;font-size:12.5px;font-weight:500;padding:9px 14px;text-align:center}
+  .btn.o{background:transparent;color:var(--copperDeep);border:1px solid var(--copperSoft)}
+  .hz{display:flex;gap:6px}
+  .hz .h{flex:1;background:var(--card);border:1px solid var(--hair);border-radius:14px;padding:8px 4px 7px;text-align:center}
+  .hz .ring{width:34px;height:34px;margin:0 auto 4px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:13px}
+  .hz .h small{font-size:9px;color:var(--ink2);display:block;line-height:1.15}
+  .bar{height:6px;border-radius:4px;background:rgba(184,105,63,.14);overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--copper);border-radius:4px}
+  .tab{position:absolute;left:12px;right:12px;bottom:14px;height:62px;border-radius:30px;background:rgba(255,250,246,.92);border:1px solid #fff;box-shadow:0 18px 30px -18px rgba(110,55,25,.45);display:flex;justify-content:space-around;align-items:center;font-size:9.5px;color:var(--ink2)}
+  .tab div{text-align:center}
+  .tab b{display:block;width:30px;height:30px;border-radius:15px;margin:0 auto 2px;background:transparent}
+  .tab .on b{background:var(--copper)} .tab .on{color:var(--copperDeep);font-weight:600}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--card);border-radius:26px 26px 0 0;padding:14px 16px 24px;box-shadow:0 -20px 40px -20px rgba(80,40,20,.35)}
+  .grab{width:36px;height:4px;border-radius:2px;background:#E3D3C8;margin:0 auto 10px}
+  .chk{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--hair);font-size:12.5px}
+  .box{width:18px;height:18px;border-radius:6px;display:grid;place-items:center;color:#fff;font-size:11px;font-weight:700}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:9px 10px;border-top:1px solid var(--hair2);vertical-align:top}
+  th{font-size:11px;color:var(--ink3);font-weight:500}
+  .map{padding:10px 64px 80px;display:grid;grid-template-columns:1.25fr 1fr;gap:28px}
+  .map .card{padding:18px}
+  .tag{font-size:10.5px;border-radius:999px;padding:2px 8px;white-space:nowrap}
+  .t-now{background:var(--okT);color:#3E7550}.t-new{background:var(--tint);color:var(--copperDeep)}.t-ext{background:var(--watchT);color:#93621F}
+  @media (max-width:700px){header.top,.rail,.map{padding-left:16px;padding-right:16px}.map{grid-template-columns:1fr}header.top h1{font-size:34px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <div class="mono" style="font-size:11px;color:var(--copper)">Celeste · v2 phone design · for approval</div>
+    <h1>Mission health first.<br><span>Everything else one tap away.</span></h1>
+    <p>The NASA task leads the app: the five spaceflight hazards and one clear "what needs attention" card sit at the top of Home. Every number says where it came from and how fresh it is. New tools (radiation, check, report, emergency) live one tap from Home, not as extra tabs.</p>
+  </div>
+  <div class="principles">
+    <div><b>One thing at a time</b>One attention card, one next action. No dashboards of 20 numbers.</div>
+    <div><b>Honest data</b>Every value: source + freshness. Demo and synthetic are always labelled.</div>
+    <div><b>Works offline</b>Emergency, checks and the report queue never need the internet.</div>
+  </div>
+</header>
+
+<section class="rail">
+
+  <!-- 1 HOME -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">01 · Home</div><h3>Hazards and attention on top</h3>
+      <p>Five hazard rings first, then one Attention card that merges several risky signals into one explanation and one action. Your sketch's trajectory and stats follow.</p>
+      <div class="feat"><span>Five-hazard map</span><span>Attention card</span><span>What changed since yesterday</span><span>Data freshness</span><span>Emergency</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body">
+        <div class="between"><div class="logo"><i>✦</i>CELESTE</div><div class="row"><span class="pill">Day 42 · Mars</span><span class="pill sos">SOS</span></div></div>
+        <div class="between" style="margin-top:14px"><h4>Mission hazards</h4><span class="k mono">NASA RIDGE</span></div>
+        <div class="hz" style="margin-top:8px">
+          <div class="h"><div class="ring" style="border:3px solid var(--watch)">R</div><small>Radiation</small></div>
+          <div class="h"><div class="ring" style="border:3px solid var(--watch)">I</div><small>Isolation</small></div>
+          <div class="h"><div class="ring" style="border:3px solid var(--ok)">D</div><small>Distance</small></div>
+          <div class="h"><div class="ring" style="border:3px solid var(--flag)">G</div><small>Gravity</small></div>
+          <div class="h"><div class="ring" style="border:3px solid var(--ok)">E</div><small>Environment</small></div>
+        </div>
+        <div class="card" style="margin-top:12px;border-color:rgba(201,85,59,.25)">
+          <div class="row"><span class="dot flag"></span><span class="mono" style="font-size:9.5px;color:var(--flag)">Needs attention</span></div>
+          <h4 style="margin-top:6px">Your body is under-recovered</h4>
+          <p class="cap2" style="margin-top:4px">Short sleep (5h 48m), HRV 38 ms (−24% vs your WHOOP baseline) and a higher dose day point the same way.</p>
+          <div class="sunk" style="margin-top:8px;font-size:12px"><b>Next:</b> 20 min rest before EVA prep. Keep today's cycle session in zone 2.</div>
+          <div class="row" style="margin-top:9px"><div class="btn" style="flex:1">Re-measure HRV</div><div class="btn o" style="flex:1">Why?</div></div>
+        </div>
+        <div class="card" style="margin-top:10px;padding:10px 12px">
+          <div class="between"><span style="font-size:12.5px;font-weight:600">Since yesterday</span><span class="k mono">3 changes</span></div>
+          <div class="cap2" style="margin-top:4px">↓ Sleep −52 min · ↓ HRV −9 ms · ↑ Dose +0.08 mSv</div>
+        </div>
+        <div class="card" style="margin-top:10px;padding:10px 12px">
+          <div class="between"><span style="font-size:12.5px">Sleep <b style="font-size:15px">5h 48m</b></span><span class="src"><i class="fresh ok"></i>WHOOP · 06:12</span></div>
+          <div class="between" style="margin-top:6px"><span style="font-size:12.5px">SpO₂ <b style="font-size:15px">—</b></span><span class="src"><i class="fresh none"></i>Missing · log it</span></div>
+        </div>
+      </div>
+      <div class="tab"><div class="on"><b></b>Home</div><div><b></b>Mission</div><div><b></b>Check</div><div><b></b>Body</div><div><b></b>Profile</div></div>
+    </div></div>
+  </div>
+
+  <!-- 2 HAZARDS -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">02 · Mission tab</div><h3>Five-hazard map + risk timeline</h3>
+      <p>Each hazard lists only the signals that feed it, with source. Drag the timeline to replay the mission day by day and see when a risk started changing.</p>
+      <div class="feat"><span>Five-hazard map</span><span>Mission risk timeline</span><span>Source-aware</span><span>Synthetic Mars demo</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body">
+        <div class="between"><h4 style="font-size:20px">Mission hazards</h4><span class="pill">Mars · 12 min delay</span></div>
+        <div style="margin-top:10px;display:grid;gap:8px">
+          <div class="card" style="padding:10px 12px"><div class="between"><div class="row"><span class="dot watch"></span><b style="font-size:13.5px">Radiation</b></div><span class="src">Dosimeter · 2h</span></div><div class="cap2" style="margin-top:3px">25.2 mSv total · today 0.51 (above average)</div></div>
+          <div class="card" style="padding:10px 12px"><div class="between"><div class="row"><span class="dot watch"></span><b style="font-size:13.5px">Isolation & confinement</b></div><span class="src">Check-in · today</span></div><div class="cap2" style="margin-top:3px">Lower mood 3 of 7 days · sleep shorter</div></div>
+          <div class="card" style="padding:10px 12px"><div class="between"><div class="row"><span class="dot ok"></span><b style="font-size:13.5px">Distance from Earth</b></div><span class="src">Mission</span></div><div class="cap2" style="margin-top:3px">Self-care mode · report queue 1 waiting</div></div>
+          <div class="card" style="padding:10px 12px"><div class="between"><div class="row"><span class="dot flag"></span><b style="font-size:13.5px">Altered gravity</b></div><span class="src">Lab · 3 d · stale</span></div><div class="cap2" style="margin-top:3px">Bone marker NTx +18% · vision symptom reported</div></div>
+          <div class="card" style="padding:10px 12px"><div class="between"><div class="row"><span class="dot ok"></span><b style="font-size:13.5px">Closed environment</b></div><span class="src">Cabin · 10 min</span></div><div class="cap2" style="margin-top:3px">CO₂ 2.9 mmHg · 22.4 °C</div></div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="between"><b style="font-size:13px">Risk timeline</b><span class="k mono">Day 1 → 42</span></div>
+          <svg width="100%" height="74" viewBox="0 0 290 74" style="margin-top:6px">
+            <g stroke-linecap="round" stroke-width="5">
+              <line x1="4" y1="10" x2="286" y2="10" stroke="#E4F0E6"/><line x1="190" y1="10" x2="286" y2="10" stroke="#D69A3F"/>
+              <line x1="4" y1="24" x2="286" y2="24" stroke="#E4F0E6"/><line x1="150" y1="24" x2="230" y2="24" stroke="#D69A3F"/><line x1="230" y1="24" x2="286" y2="24" stroke="#D69A3F"/>
+              <line x1="4" y1="38" x2="286" y2="38" stroke="#E4F0E6"/>
+              <line x1="4" y1="52" x2="286" y2="52" stroke="#E4F0E6"/><line x1="120" y1="52" x2="250" y2="52" stroke="#D69A3F"/><line x1="250" y1="52" x2="286" y2="52" stroke="#C9553B"/>
+              <line x1="4" y1="66" x2="286" y2="66" stroke="#E4F0E6"/>
+            </g>
+            <line x1="250" y1="2" x2="250" y2="72" stroke="#B8693F" stroke-width="1.5"/><circle cx="250" cy="2" r="4" fill="#B8693F"/>
+          </svg>
+          <div class="cap2">Day 36 · gravity turned red after the bone lab result</div>
+        </div>
+      </div>
+      <div class="tab"><div><b></b>Home</div><div class="on"><b></b>Mission</div><div><b></b>Check</div><div><b></b>Body</div><div><b></b>Profile</div></div>
+    </div></div>
+  </div>
+
+  <!-- 3 CHECK -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">03 · Check tab</div><h3>Daily crew health check</h3>
+      <p>Watch values arrive pre-filled with source and time; only the missing ones ask for input. Mood can stay private. Five short steps, about 90 seconds.</p>
+      <div class="feat"><span>Daily crew check</span><span>Private wellbeing</span><span>Sensor confidence</span><span>Source-aware</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body">
+        <div class="row" style="gap:4px"><i style="flex:1;height:3px;border-radius:2px;background:var(--copper)"></i><i style="flex:1;height:3px;border-radius:2px;background:var(--copper)"></i><i style="flex:1;height:3px;border-radius:2px;background:var(--copperSoft)"></i><i style="flex:1;height:3px;border-radius:2px;background:#E9DAD0"></i><i style="flex:1;height:3px;border-radius:2px;background:#E9DAD0"></i></div>
+        <h4 style="font-size:22px;margin-top:14px">Vitals</h4>
+        <p class="cap2" style="margin-top:2px">From your WHOOP this morning. Tap one to correct it.</p>
+        <div class="card" style="margin-top:12px;padding:4px 12px">
+          <div class="chk" style="border:0"><span style="flex:1">Sleep</span><b>5h 48m</b><span class="src"><i class="fresh ok"></i>WHOOP</span></div>
+          <div class="chk"><span style="flex:1">Resting HR</span><b>61 bpm</b><span class="src"><i class="fresh ok"></i>WHOOP</span></div>
+          <div class="chk"><span style="flex:1">HRV</span><b>38 ms</b><span class="src"><i class="fresh watch"></i>Low confidence</span></div>
+          <div class="chk"><span style="flex:1">SpO₂</span><span class="pill" style="border-color:var(--copperSoft);color:var(--copperDeep)">+ Add</span></div>
+          <div class="chk"><span style="flex:1">Radiation dose</span><b>0.51 mSv</b><span class="src"><i class="fresh ok"></i>Dosimeter</span></div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="between"><b style="font-size:13px">Sensor confidence</b><b style="color:var(--watch)">72%</b></div>
+          <div class="bar" style="margin-top:7px"><i style="width:72%;background:var(--watch)"></i></div>
+          <p class="cap2" style="margin-top:6px">HRV was recorded with a loose strap. Re-measure for a cleaner value.</p>
+        </div>
+        <div class="sunk" style="margin-top:10px" >
+          <div class="between"><b style="font-size:12.5px">🔒 Private wellbeing</b><span class="pill">Only me</span></div>
+          <p class="cap2" style="margin-top:3px">Mood answers stay on this device unless you choose to share them with the flight surgeon.</p>
+        </div>
+        <div class="btn" style="margin-top:12px">Continue · Mood</div>
+      </div>
+      <div class="tab"><div><b></b>Home</div><div><b></b>Mission</div><div class="on"><b></b>Check</div><div><b></b>Body</div><div><b></b>Profile</div></div>
+    </div></div>
+  </div>
+
+  <!-- 4 REPEAT -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">04 · From the attention card</div><h3>Repeat a questionable measurement</h3>
+      <p>Guided 2-minute re-measure. The result says plainly whether the alert cleared or remains, compared only with the same device's baseline.</p>
+      <div class="feat"><span>Repeat measurement</span><span>Comparable baselines</span><span>Attention card</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body" style="text-align:center">
+        <div class="mono k" style="margin-top:20px">Re-measure · HRV</div>
+        <h4 style="font-size:22px;margin-top:8px">Sit still and breathe slowly</h4>
+        <svg width="210" height="210" viewBox="0 0 210 210" style="margin:22px auto 0;display:block">
+          <circle cx="105" cy="105" r="88" fill="none" stroke="#F6E4D9" stroke-width="12"/>
+          <circle cx="105" cy="105" r="88" fill="none" stroke="#B8693F" stroke-width="12" stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="150" transform="rotate(-90 105 105)"/>
+          <text x="105" y="104" text-anchor="middle" font-size="40" font-weight="600" fill="#2B1E18" font-family="Geist">0:34</text>
+          <text x="105" y="128" text-anchor="middle" font-size="12" fill="#6E5A50" font-family="Geist">reading WHOOP…</text>
+        </svg>
+      </div>
+      <div class="sheet">
+        <div class="grab"></div>
+        <div class="between"><b style="font-size:15px">Result</b><span class="tag t-now">Alert cleared</span></div>
+        <div class="row" style="margin-top:10px;gap:14px">
+          <div style="flex:1" class="sunk"><div class="k mono">Before</div><b style="font-size:20px">38 ms</b></div>
+          <div style="flex:1" class="sunk"><div class="k mono">Now</div><b style="font-size:20px;color:var(--ok)">51 ms</b></div>
+        </div>
+        <p class="cap2" style="margin-top:8px">Compared with your WHOOP HRV baseline (49–58 ms). Apple Watch HRV is never mixed in.</p>
+        <div class="btn" style="margin-top:10px">Back to Home</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 5 RADIATION -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">05 · Mission › Radiation</div><h3>Radiation monitor + space weather</h3>
+      <p>Your personal dosimeter is the dose. NASA DONKI solar events are shown as context only. During a solar particle event the shelter countdown takes over the top.</p>
+      <div class="feat"><span>Radiation monitor</span><span>NASA DONKI context</span><span>Shelter countdown</span><span>Coverage gaps</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body">
+        <div class="card" style="background:#2B1A12;color:#fff;border:0">
+          <div class="between"><span class="mono" style="font-size:9.5px;color:#F3B48D">Solar particle event</span><span class="mono" style="font-size:9.5px;color:#F3D9C6">NASA DONKI</span></div>
+          <div class="row" style="margin-top:6px;align-items:baseline"><b style="font-size:30px">14:32</b><span style="font-size:12px;color:#F3D9C6">to reach the shelter</span></div>
+          <div class="btn" style="margin-top:8px;background:#fff;color:#8E4A2A">Start shelter checklist</div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="between"><b style="font-size:13px">Mission dose</b><span class="src"><i class="fresh ok"></i>Dosimeter · 2h</span></div>
+          <div class="row" style="align-items:baseline;margin-top:4px"><b style="font-size:28px">25.2</b><span class="cap2">mSv of 600 mSv career limit</span></div>
+          <div class="bar" style="margin-top:6px"><i style="width:4.2%"></i></div>
+          <svg width="100%" height="58" viewBox="0 0 290 58" style="margin-top:10px">
+            <g fill="#E3B79E">
+              <rect x="4" y="30" width="16" height="24" rx="3"/><rect x="26" y="28" width="16" height="26" rx="3"/><rect x="48" y="33" width="16" height="21" rx="3"/>
+              <rect x="70" y="54" width="16" height="0" rx="3"/><rect x="92" y="26" width="16" height="28" rx="3"/><rect x="114" y="29" width="16" height="25" rx="3"/>
+              <rect x="136" y="12" width="16" height="42" rx="3" fill="#B8693F"/>
+            </g>
+            <rect x="70" y="20" width="16" height="34" rx="3" fill="none" stroke="#C9553B" stroke-dasharray="3 3"/>
+          </svg>
+          <div class="between cap2"><span>Interval dose · 7 days</span><span style="color:var(--flag)">1 coverage gap (Thu)</span></div>
+        </div>
+        <div class="card" style="margin-top:10px">
+          <div class="between"><b style="font-size:13px">Space weather</b><span class="tag t-ext">Context, not your dose</span></div>
+          <div class="chk" style="border:0;padding-top:8px"><span class="dot watch"></span><span style="flex:1">Solar particle event · Nov 12</span><span class="src">DONKI</span></div>
+          <div class="chk"><span class="dot none"></span><span style="flex:1">CME · Earth-directed · Nov 10</span><span class="src">DONKI</span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 6 BODY -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">06 · Body tab</div><h3>Mission-ready body map</h3>
+      <p>Your faceless glass body. Each dot opens its real reading, source, trend and missing-data status. Already built in the app.</p>
+      <div class="feat"><span>Body map</span><span>Source + freshness</span><span>Missing data</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div style="position:relative;height:470px">
+        <img src="../../mobile/assets/body/glass.png" alt="" style="position:absolute;left:50%;top:6px;height:460px;transform:translateX(-50%)">
+        <span class="dot watch" style="position:absolute;left:50%;top:22px;width:12px;height:12px;border:2px solid #fff;margin-left:-6px"></span>
+        <span class="dot flag" style="position:absolute;left:50%;top:40px;width:12px;height:12px;border:2px solid #fff;margin-left:-6px"></span>
+        <span class="dot ok" style="position:absolute;left:52.5%;top:99px;width:12px;height:12px;border:2px solid #fff"></span>
+        <span class="dot watch" style="position:absolute;left:50%;top:216px;width:16px;height:16px;border:3px solid #fff;margin-left:-8px;box-shadow:0 0 0 8px rgba(214,154,63,.25)"></span>
+        <span class="dot watch" style="position:absolute;left:43%;top:335px;width:12px;height:12px;border:2px solid #fff"></span>
+      </div>
+      <div class="sheet" style="padding-bottom:20px">
+        <div class="grab"></div>
+        <div class="between"><div class="row"><span class="dot watch"></span><b style="font-size:15px">Bone loss marker</b></div><span class="tag t-ext">Stale · 3 days</span></div>
+        <div class="row" style="align-items:baseline;margin-top:6px"><b style="font-size:24px">NTx +18%</b><span class="cap2">vs your pre-flight baseline</span></div>
+        <div class="between" style="margin-top:6px"><span class="src">Lab result · urine · Nov 11</span><span class="src">Trend ↑ 2 weeks</span></div>
+        <div class="row" style="margin-top:10px"><div class="btn" style="flex:1">Add loaded run</div><div class="btn o" style="flex:1">Trend</div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 7 REPORT -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">07 · Profile › Flight surgeon</div><h3>Report + offline handoff queue</h3>
+      <p>One compact report (trends, symptoms, missing data, actions, sources). With limited comms it waits in a queue: Draft → Queued → Sent → Acknowledged.</p>
+      <div class="feat"><span>Flight-surgeon report</span><span>Offline handoff queue</span><span>Mission briefing</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body">
+        <h4 style="font-size:20px">Flight surgeon</h4>
+        <div class="row" style="margin-top:6px"><span class="pill"><span class="dot watch"></span>Link down · next window 18:40</span></div>
+        <div class="card" style="margin-top:12px">
+          <div class="between"><b style="font-size:13.5px">Report · Day 42</b><span class="tag t-new">Draft</span></div>
+          <div class="cap2" style="margin-top:6px;line-height:1.6">
+            <b>Trends</b> HRV ↓ 24%, sleep ↓, dose ↑<br>
+            <b>Symptoms</b> blurred vision (new), knee pain<br>
+            <b>Missing</b> SpO₂ 2 days, BP 4 days<br>
+            <b>Actions taken</b> rest block, zone-2 only<br>
+            <b>Sources</b> WHOOP · dosimeter · check-in · lab
+          </div>
+          <div class="btn" style="margin-top:10px">Queue for next window</div>
+        </div>
+        <div class="between" style="margin-top:14px"><b style="font-size:13px">Handoff queue</b><span class="k mono">Mars · 12 min one-way</span></div>
+        <div class="card" style="margin-top:8px;padding:4px 12px">
+          <div class="chk" style="border:0"><span style="flex:1">Day 41 report</span><span class="tag t-ext">Queued</span></div>
+          <div class="chk"><span style="flex:1">Vision symptom note</span><span class="tag t-new">Sent 11:02</span></div>
+          <div class="chk"><span style="flex:1">Day 40 report</span><span class="tag t-now">Acknowledged</span></div>
+        </div>
+      </div>
+      <div class="tab"><div><b></b>Home</div><div><b></b>Mission</div><div><b></b>Check</div><div><b></b>Body</div><div class="on"><b></b>Profile</div></div>
+    </div></div>
+  </div>
+
+  <!-- 8 EMERGENCY -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">08 · SOS from any screen</div><h3>Emergency protocol (offline)</h3>
+      <p>One tap from the header. Large, high-contrast training checklists that work with no connection; each step is a big tap target.</p>
+      <div class="feat"><span>Emergency protocol</span><span>Works offline</span></div></div>
+    <div class="phone"><div class="scr dark"><div class="island"></div><div class="sb" style="color:#fff"><span>9:41</span><span>●●●</span></div>
+      <div class="body" style="color:#fff">
+        <div class="mono" style="font-size:10px;color:#F3B48D">Training checklist · offline</div>
+        <h4 style="font-size:26px;margin-top:6px">Emergency</h4>
+        <div style="display:grid;gap:8px;margin-top:14px">
+          <div style="background:#C9553B;border-radius:18px;padding:14px"><b style="font-size:16px">Medical: chest pain</b><div style="font-size:11.5px;opacity:.85;margin-top:2px">7 steps · ~3 min</div></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:18px;padding:14px"><b style="font-size:15px">Rapid depressurisation</b><div style="font-size:11.5px;opacity:.7;margin-top:2px">9 steps</div></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:18px;padding:14px"><b style="font-size:15px">Fire / smoke</b><div style="font-size:11.5px;opacity:.7;margin-top:2px">8 steps</div></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:18px;padding:14px"><b style="font-size:15px">Toxic atmosphere</b><div style="font-size:11.5px;opacity:.7;margin-top:2px">6 steps</div></div>
+          <div style="background:rgba(255,255,255,.08);border-radius:18px;padding:14px"><b style="font-size:15px">Solar particle event</b><div style="font-size:11.5px;opacity:.7;margin-top:2px">Shelter · 5 steps</div></div>
+        </div>
+        <div style="margin-top:14px;font-size:11px;opacity:.6">Training content for the demo — not an operational NASA procedure.</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- 9 EVA + TRAINING -->
+  <div class="shot">
+    <div class="cap"><div class="mono n">09 · Before a spacewalk</div><h3>EVA readiness check</h3>
+      <p>Four gates from today's data. Any red gate says who to talk to. The training plan adapts from the same signals.</p>
+      <div class="feat"><span>EVA readiness</span><span>Training countermeasures</span><span>Camera form check (optional)</span></div></div>
+    <div class="phone"><div class="scr"><div class="island"></div><div class="sb"><span>9:41</span><span>●●●</span></div>
+      <div class="body">
+        <div class="mono k">EVA 2 · tomorrow 08:00</div>
+        <h4 style="font-size:22px;margin-top:6px">Not ready yet</h4>
+        <p class="cap2" style="margin-top:3px">1 of 4 checks needs the flight surgeon.</p>
+        <div class="card" style="margin-top:12px;padding:4px 12px">
+          <div class="chk" style="border:0"><span class="box" style="background:var(--ok)">✓</span><span style="flex:1">Sleep last 2 nights</span><span class="src">WHOOP</span></div>
+          <div class="chk"><span class="box" style="background:var(--ok)">✓</span><span style="flex:1">Heart & HRV in range</span><span class="src">WHOOP</span></div>
+          <div class="chk"><span class="box" style="background:var(--ok)">✓</span><span style="flex:1">Dose below EVA limit</span><span class="src">Dosimeter</span></div>
+          <div class="chk"><span class="box" style="background:var(--flag)">!</span><span style="flex:1">New vision symptom</span><span class="src">Check-in</span></div>
+        </div>
+        <div class="btn" style="margin-top:12px">Message flight surgeon</div>
+        <div class="between" style="margin-top:18px"><b style="font-size:13px">Today's countermeasures</b><span class="k mono">Adapted</span></div>
+        <div class="card" style="margin-top:8px">
+          <div class="between"><b style="font-size:13px">+1 km loaded treadmill</b><span class="tag t-new">Bone</span></div>
+          <p class="cap2" style="margin-top:3px">Because NTx is up 18% · within crew protocol</p>
+        </div>
+        <div class="card" style="margin-top:8px">
+          <div class="between"><b style="font-size:13px">Squat form check</b><span class="tag t-ext">Optional</span></div>
+          <p class="cap2" style="margin-top:3px">Camera counts reps on-device · nothing uploaded</p>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+</section>
+
+<section class="map">
+  <div class="card">
+    <h4 style="font-size:18px">Where each of the 25 features lives</h4>
+    <p class="cap2" style="margin-top:4px">Five tabs: Home · Mission · Check · Body · Profile. Training moves inside Mission as "Countermeasures"; the Assistant chat stays, but Judge mode hides it.</p>
+    <table style="margin-top:12px">
+      <tr><th>Feature</th><th>Place</th><th>Status</th></tr>
+      <tr><td>Mission briefing (destination, duration, comm delay, EVA schedule, crew size, objective)</td><td>Sign-up + Profile › Mission</td><td><span class="tag t-ext">Extend</span></td></tr>
+      <tr><td>Five-hazard mission map</td><td>Home rings → Mission tab</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Daily crew health check · Private wellbeing check</td><td>Check tab</td><td><span class="tag t-ext">Extend</span></td></tr>
+      <tr><td>Data freshness status · Source-aware measurements</td><td>Every value (chip)</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Comparable personal baselines · Sensor confidence score</td><td>Metric detail · Check</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Attention card · What changed since yesterday</td><td>Home</td><td><span class="tag t-ext">Extend</span></td></tr>
+      <tr><td>Repeat measurement flow</td><td>From attention card</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Radiation monitor · NASA DONKI context · Shelter countdown</td><td>Mission › Radiation</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Mission risk timeline</td><td>Mission tab</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Offline handoff queue · Flight-surgeon report</td><td>Profile › Flight surgeon</td><td><span class="tag t-ext">Extend</span></td></tr>
+      <tr><td>Emergency protocol</td><td>SOS in header</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Training countermeasure plan · Camera form check · EVA readiness</td><td>Mission › Countermeasures</td><td><span class="tag t-ext">Extend</span></td></tr>
+      <tr><td>Mission-ready body map</td><td>Body tab</td><td><span class="tag t-now">Built</span></td></tr>
+      <tr><td>Real NASA research layer (Inspiration4 blood counts)</td><td>Body › Blood · labelled "NASA research"</td><td><span class="tag t-new">New</span></td></tr>
+      <tr><td>Synthetic Mars demo · Clean judge mode</td><td>Profile › Demo & presentation</td><td><span class="tag t-new">New</span></td></tr>
+    </table>
+  </div>
+  <div style="display:grid;gap:14px;align-content:start">
+    <div class="card">
+      <h4>Freshness & source chip</h4>
+      <p class="cap2" style="margin-top:4px">One small line under every value. Colour of the dot = freshness.</p>
+      <div style="display:grid;gap:7px;margin-top:10px">
+        <span class="src"><i class="fresh ok"></i>Received · WHOOP · 06:12</span>
+        <span class="src"><i class="fresh watch"></i>Stale · Lab result · 3 days</span>
+        <span class="src"><i class="fresh none"></i>Missing · tap to log</span>
+        <span class="src"><i class="fresh" style="background:#7FA7D9"></i>Waiting to sync · Apple Watch</span>
+        <span class="src"><i class="fresh flag"></i>Error · dosimeter not reachable</span>
+        <span class="src"><i class="fresh" style="background:#B49BD8"></i>Demo · synthetic Mars telemetry</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>Judge mode</h4>
+      <p class="cap2" style="margin-top:4px">One switch in Profile. Hides the assistant chat, XP and streaks, food-photo AI and general fitness, so judges see only the NASA mission-health flow.</p>
+    </div>
+    <div class="card">
+      <h4>Motion</h4>
+      <p class="cap2" style="margin-top:4px">Every tap: spring press + haptic. Sheets slide up with a soft spring; numbers count, never jump; hazard rings fill on arrival; the attention card gently pulses once when it changes.</p>
+    </div>
+  </div>
+</section>
+</body>
+</html>

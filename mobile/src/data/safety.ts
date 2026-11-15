@@ -1,0 +1,3 @@
+/** Distress wording check and the message shown instead of a template reply. */
+export const CRISIS = /(kill myself|suicid|end my life|want to die|don'?t want to (live|be here)|hurt myself|self[- ]harm|no reason to live|disappear forever|better off without me|can'?t go on)/i;
+export const CARE_MESSAGE = 'I am really glad you said that out loud. It sounds heavy, and you deserve real support right now, not only a message from an app. Please contact your flight surgeon or behavioral health support team now and follow your mission\'s emergency procedure. If someone is with you, tell them how you feel. You are not alone up there.';

@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Astra References</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#F1EFEC; --ink:#1B1613; --ink2:#5E544D; --muted:#9E948D; --line:#E4DFDA;
+    --c2:#C99272; --c3:#9A5B3C; --red:#E5533D; --green:#3DBE8B;
+    --grad:linear-gradient(180deg,#DDD6D0 0%,#CDAE99 30%,#A56C4D 64%,#5B3323 100%);
+    --copper:linear-gradient(135deg,#D9A07C 0%,#B06E4B 55%,#7E4329 100%);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Inter Tight",-apple-system,system-ui,sans-serif;color:var(--ink);background:#2a1d17;-webkit-font-smoothing:antialiased}
+  .board{position:relative;padding:80px 90px 90px;background:
+      radial-gradient(60% 50% at 18% 12%,#d8d0ca 0%,rgba(216,208,202,0) 70%),
+      linear-gradient(140deg,#c9c0b9 0%,#a68a7a 42%,#6a4838 78%,#4b3024 100%);overflow:hidden}
+  .board-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:64px;gap:40px}
+  .board-head h1{font-size:64px;font-weight:600;letter-spacing:-.03em;line-height:1;color:#1B1613}
+  .board-head h1 em{font-style:italic;font-weight:500}
+  .board-head p{font-size:18px;color:#3b2c25;margin-top:14px;max-width:900px;line-height:1.45}
+  .legend{display:flex;gap:10px;align-items:center;flex:none}
+  .sw{width:46px;height:46px;border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.4) inset}
+  .legend span{font-size:13px;color:#fff;opacity:.85;margin-left:8px;max-width:150px;line-height:1.3}
+  .row{display:flex;gap:52px;align-items:flex-start;margin-bottom:70px}
+  .cell{width:380px;flex:none}
+  .cap{margin-top:22px;color:#fff}
+  .cap .n{font-size:13px;letter-spacing:.08em;opacity:.7;text-transform:uppercase}
+  .cap h3{font-size:20px;font-weight:600;margin:4px 0 6px;letter-spacing:-.01em}
+  .cap p{font-size:14px;line-height:1.45;opacity:.85}
+  .cap .q{display:inline-block;margin-top:8px;font-size:12.5px;padding:5px 10px;border-radius:99px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3)}
+
+  .device{width:380px;padding:10px;border-radius:58px;background:#0f0c0b;box-shadow:0 50px 90px -40px rgba(30,12,4,.75),0 0 0 1.5px #3a302b inset}
+  .screen{width:360px;height:780px;border-radius:48px;overflow:hidden;position:relative;background:var(--bg)}
+  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:108px;height:32px;border-radius:20px;background:#000;z-index:30}
+  .sb{position:absolute;top:0;left:0;right:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:4px 30px 0 34px;font-size:15px;font-weight:600;z-index:29}
+  .sb.light{color:#fff}
+  .home-ind{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:124px;height:5px;border-radius:3px;background:var(--ink);opacity:.9;z-index:29}
+  .home-ind.light{background:#fff}
+
+  .ico{display:inline-grid;place-items:center}
+  .ico svg{width:22px;height:22px}
+  .rb{width:56px;height:56px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 8px 20px -8px rgba(70,35,15,.45)}
+  .rb.dark{background:var(--ink);color:#fff}
+  .rb.off{background:#E5E0DB;color:#B6ADA6;box-shadow:none}
+  .nav{position:absolute;left:24px;right:24px;bottom:34px;display:flex;justify-content:space-between;align-items:center}
+  .nav .lbl{font-size:12px;color:var(--muted);text-align:center;margin-top:6px}
+  .pill{height:56px;border-radius:28px;font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:10px}
+  .pill.dark{background:var(--ink);color:#fff}
+  .pill.white{background:#fff;color:var(--ink);box-shadow:0 10px 24px -12px rgba(50,20,8,.6)}
+  .pill.glass{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.6);color:#fff;backdrop-filter:blur(8px)}
+  .steps{display:flex;gap:6px;justify-content:center}
+  .steps i{width:20px;height:3px;border-radius:2px;background:rgba(27,22,19,.14)}
+  .steps i.on{background:var(--ink)}
+  .logo{display:flex;align-items:center;gap:8px;font-weight:600;font-size:19px;letter-spacing:-.01em}
+  .logo svg{width:22px;height:22px}
+  .wash{background:radial-gradient(130% 46% at 50% 0%,#EAD7C8 0%,rgba(241,239,236,0) 72%),var(--bg)}
+  .form{position:absolute;top:96px;left:24px;right:24px}
+  .form h2{font-size:30px;font-weight:600;letter-spacing:-.02em;text-align:center}
+  .form .sub{font-size:14px;color:var(--ink2);text-align:center;margin-top:8px;line-height:1.4}
+  .field{margin-top:20px}
+  .field label{display:block;font-size:13.5px;font-weight:500;margin-bottom:8px}
+  .field label b{color:var(--c3)}
+  .input{height:54px;border-radius:16px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;padding:0 16px;font-size:15.5px;color:var(--muted);gap:10px}
+  .input.focus{border-color:#C99272;box-shadow:0 0 0 4px rgba(201,146,114,.18);color:var(--ink)}
+  .input .caret{width:1.5px;height:20px;background:var(--c3);margin-left:-6px}
+  .check{display:flex;gap:10px;align-items:flex-start;margin-top:22px;font-size:13.5px;color:var(--ink2);line-height:1.4}
+  .check .box{width:20px;height:20px;border-radius:6px;background:var(--ink);color:#fff;display:grid;place-items:center;flex:none}
+  .check .box svg{width:14px;height:14px}
+  .check a{color:var(--c3);font-weight:500}
+
+  .hero{position:absolute;inset:0 0 auto 0;height:440px;background:radial-gradient(90% 70% at 70% 28%,#6b3e29 0%,#311b12 52%,#120906 100%);overflow:hidden}
+  .stars{position:absolute;inset:0}
+  .stars i{position:absolute;border-radius:50%;background:#fff}
+  .planet{position:absolute;left:-40%;right:-40%;top:330px;height:600px;border-radius:50%;
+      background:radial-gradient(60% 40% at 50% 8%,#e1a27a 0%,#b0643f 35%,#6d3420 70%,#3a1a0f 100%);box-shadow:0 -10px 40px rgba(232,150,100,.45)}
+  .hero img.ship{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:90px;display:block;z-index:2}
+  .hero .logo{position:absolute;top:58px;left:24px;color:#fff;z-index:3}
+  .hero .dest{position:absolute;top:58px;right:22px;font-size:12px;font-weight:500;color:#fff;padding:6px 11px;border-radius:99px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);z-index:3;letter-spacing:.02em}
+  .mk{position:absolute;z-index:3;transform:translate(-50%,calc(-100% - 12px));font-size:11px;font-weight:500;color:#fff;padding:3px 8px;border-radius:99px;background:rgba(20,10,6,.45);border:1px solid rgba(255,255,255,.28);white-space:nowrap}
+  .mk.ship{background:#fff;color:var(--ink);border-color:#fff;font-weight:600}
+  .lower{position:absolute;top:440px;left:0;right:0;bottom:0}
+  .lower .q{font-size:26px;font-weight:600;letter-spacing:-.02em;text-align:center;margin-top:10px;line-height:1.15}
+  .dial{position:absolute;left:0;right:0;top:514px;height:170px}
+  .bignum{text-align:center}
+  .bignum b{display:block;font-size:64px;font-weight:500;letter-spacing:-.05em;line-height:.95}
+  .bignum span{font-size:12.5px;color:var(--ink2)}
+
+  .grad{background:var(--grad)}
+  .welcome-title{position:absolute;left:24px;right:24px;text-align:center;color:#fff}
+  .welcome-title h2{font-size:40px;line-height:1.02;font-weight:600;letter-spacing:-.03em}
+  .welcome-title h2 em{font-weight:500}
+  .orsep{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.75);font-size:13px;margin:16px 0}
+  .orsep::before,.orsep::after{content:"";flex:1;height:1px;background:rgba(255,255,255,.35)}
+  .shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+
+  .codebox{display:flex;gap:12px;justify-content:center;margin-top:30px}
+  .codebox div{width:64px;height:72px;border-radius:18px;background:#fff;border:1px solid var(--line);display:grid;place-items:center;font-size:30px;font-weight:600}
+  .codebox div.cur{border-color:#C99272;box-shadow:0 0 0 4px rgba(201,146,114,.18)}
+  .codebox div.cur::after{content:"";width:2px;height:30px;background:var(--c3)}
+  .mailtile{display:flex;gap:14px;align-items:center;background:#fff;border-radius:22px;padding:14px;margin-top:26px;border:1px solid var(--line)}
+  .mailtile .t{width:54px;height:54px;border-radius:16px;background:var(--copper);display:grid;place-items:center;color:#fff;flex:none}
+  .mailtile b{font-size:16px;display:block}
+  .mailtile span{font-size:13px;color:var(--ink2)}
+
+  .dhead{position:absolute;top:54px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center}
+  .datepill{display:flex;align-items:center;gap:6px;background:#fff;border-radius:99px;padding:5px;font-size:14px;font-weight:500;box-shadow:0 4px 14px -8px rgba(60,30,10,.4)}
+  .datepill .c{width:28px;height:28px;border-radius:50%;background:var(--bg);display:grid;place-items:center}
+  .datepill .c svg{width:16px;height:16px}
+  .datepill .t{padding:0 8px}
+  .batt{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);font-weight:500}
+  .batt .w{position:relative}
+  .batt .w::after{content:"";position:absolute;top:-1px;right:-3px;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 2px var(--bg)}
+  .reddot{width:7px;height:7px;border-radius:50%;background:var(--red)}
+  .placeholder{position:absolute;top:110px;left:18px;right:18px;bottom:128px;border:1.5px dashed #CFC6BF;border-radius:28px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px;line-height:1.5}
+  .tabbar{position:absolute;left:22px;right:22px;bottom:30px;height:68px;border-radius:34px;background:#fff;display:flex;justify-content:space-around;align-items:center;box-shadow:0 14px 30px -14px rgba(60,30,10,.5)}
+  .tabbar .t{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;color:#6c625b}
+  .tabbar .t.on{background:var(--copper);color:#fff}
+
+  /* intro clip slot */
+  .clip{position:absolute;inset:0;background:#0d0907}
+  .clipframe{position:absolute;inset:92px 22px 110px;border-radius:28px;border:1.5px dashed rgba(232,190,160,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;color:#fff;
+     background:radial-gradient(70% 50% at 50% 40%,rgba(201,146,114,.28),rgba(201,146,114,0) 70%)}
+  .clipframe .play{width:74px;height:74px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center}
+  .clipframe .play svg{width:30px;height:30px}
+  .clipframe b{font-size:22px;font-weight:600;letter-spacing:-.02em}
+  .clipframe span{font-size:13px;opacity:.7;line-height:1.5}
+  .skip{position:absolute;top:58px;right:22px;font-size:13.5px;font-weight:500;background:#fff;color:var(--ink);padding:7px 14px;border-radius:99px;z-index:5}
+  .prog{position:absolute;top:72px;left:22px;right:96px;height:3px;border-radius:2px;background:rgba(255,255,255,.25);z-index:5}
+  .prog i{position:absolute;inset:0 62% 0 0;border-radius:2px;background:#fff}
+  .hidden{display:none}
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+}}
+</script>
+</head>
+<body>
+
+<!-- ============================ BOARD 1 · FLOW ============================ -->
+<section class="board" id="flow">
+  <div class="board-head">
+    <div>
+      <h1>Astra — <em>first launch &amp; sign-up</em></h1>
+      <p>Each step has its own 3D object. Your intro clip plays first, then a helmet on Welcome, the drifting Orion for age, a route map for mission length (second board), and the 3D Astra star on the final welcome.</p>
+    </div>
+    <div class="legend">
+      <div class="sw" style="background:#F1EFEC"></div><div class="sw" style="background:#DDD6D0"></div><div class="sw" style="background:#C99272"></div>
+      <div class="sw" style="background:#9A5B3C"></div><div class="sw" style="background:#5B3323"></div><div class="sw" style="background:#1B1613"></div>
+      <span>Inter Tight · copper ramp from the ring photo</span>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- 00 Intro clip -->
+    <div class="cell">
+      <div class="device"><div class="screen">
+        <div class="clip"></div>
+        <div class="island"></div><div class="sb light" data-sb></div>
+        <div class="prog"><i></i></div><div class="skip">Skip</div>
+        <div class="clipframe">
+          <div class="play"><i class="ico" data-i="play"></i></div>
+          <b>Your Astra clip</b>
+          <span>Full screen · 9:16 vertical<br/>MP4 you send at the end</span>
+        </div>
+        <div style="position:absolute;right:22px;bottom:40px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);color:#fff;display:grid;place-items:center;z-index:5"><i class="ico" data-i="volume"></i></div>
+        <div class="home-ind light"></div>
+      </div></div>
+      <div class="cap"><div class="n">00 · very first launch</div><h3>Intro clip slot</h3><p>Your 3D ad plays full screen once, like the reels you sent. A progress line, Skip and sound on/off sit on top. At the end it cross-fades into Welcome. I’ll drop your file in when you send it.</p></div>
+    </div>
+
+    <!-- 01 Welcome A -->
+    <div class="cell">
+      <div class="device"><div class="screen grad">
+        <div class="island"></div><div class="sb light" data-sb></div>
+        <img class="shot" data-render="helmet1" alt="" />
+        <div class="welcome-title" style="top:470px">
+          <div class="logo" style="justify-content:center;margin-bottom:16px" data-logo="#fff"></div>
+          <h2>Welcome to<br/>the <em>Astra</em></h2>
+        </div>
+        <div class="home-ind light"></div>
+      </div></div>
+      <div class="cap"><div class="n">01</div><h3>Welcome — helmet</h3><p>A 3D astronaut helmet with a copper visor floats and slowly turns; the visor catches the light. The title rises in, then slides up (02).</p></div>
+    </div>
+
+    <!-- 02 Welcome B -->
+    <div class="cell">
+      <div class="device"><div class="screen grad">
+        <div class="island"></div><div class="sb light" data-sb></div>
+        <img class="shot" data-render="helmet2" alt="" />
+        <div class="welcome-title" style="top:400px">
+          <h2 style="font-size:34px">Welcome to<br/>the <em>Astra</em></h2>
+          <div style="margin-top:26px" class="pill glass">Log in</div>
+          <div style="font-size:12.5px;opacity:.85;margin-top:8px">Crew member? Your account is ready.</div>
+          <div class="orsep">or</div>
+        </div>
+        <div style="position:absolute;left:24px;right:24px;bottom:42px"><div class="pill white">Get started <i class="ico" data-i="arrow-r"></i></div></div>
+        <div class="home-ind light"></div>
+      </div></div>
+      <div class="cap"><div class="n">02</div><h3>Welcome — choose a path</h3><p>The helmet moves up and gets smaller; the buttons fade in.</p></div>
+    </div>
+
+    <!-- 03 Sign up name -->
+    <div class="cell">
+      <div class="device"><div class="screen wash">
+        <div class="island"></div><div class="sb" data-sb></div>
+        <div class="form">
+          <div class="steps"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+          <h2 style="margin-top:22px">Sign up</h2>
+          <div class="sub">Tell us who’s flying. It takes a minute.</div>
+          <div class="field" style="margin-top:30px"><label>Name <b>*</b></label><div class="input focus">Joseph<span class="caret"></span></div></div>
+          <div class="field"><label>Surname <b>*</b></label><div class="input">e.g. Brown</div></div>
+          <div class="check"><div class="box"><i class="ico" data-i="check"></i></div><div>I agree to the <a>Terms</a> and <a>Privacy Policy</a></div></div>
+        </div>
+        <div class="nav">
+          <div><div class="rb"><i class="ico" data-i="chev-l"></i></div><div class="lbl">Back</div></div>
+          <div><div class="rb dark"><i class="ico" data-i="chev-r"></i></div><div class="lbl">Next</div></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">03 · Get started</div><h3>Name &amp; surname</h3><p>Next unlocks when both fields are filled and Terms is ticked.</p></div>
+    </div>
+
+    <!-- 04 Age -->
+    <div class="cell">
+      <div class="device"><div class="screen">
+        <div class="island"></div><div class="sb light" data-sb></div>
+        <div class="hero">
+          <div class="stars" data-stars="70"></div>
+          <div class="planet"></div>
+          <img class="ship" data-render="ageShip" alt="" />
+          <div class="logo" data-logo="#fff"></div>
+          <svg class="wave" viewBox="0 0 360 90" preserveAspectRatio="none" data-wave></svg>
+        </div>
+        <div class="lower">
+          <div class="steps"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+          <div class="q">How old are you?</div>
+        </div>
+        <svg class="dial" data-dial="18,100,38,1"></svg>
+        <div class="nav">
+          <div class="rb"><i class="ico" data-i="chev-l"></i></div>
+          <div class="bignum"><b>38</b><span>years old</span></div>
+          <div class="rb dark"><i class="ico" data-i="chev-r"></i></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">04</div><h3>Age — Orion drifting</h3><p>The capsule drifts and slowly rolls over Mars. Drag the curved scale (18–100).</p></div>
+    </div>
+
+    <!-- 05 Mission (Mars state) -->
+    <div class="cell">
+      <div data-mission="C" data-step="3"></div>
+      <div class="cap"><div class="n">05</div><h3>Mission length — route map</h3><p>The camera pulls back from the ship to its route. Drag the scale and the route and the craft change. All states are on the second board.</p></div>
+    </div>
+  </div>
+
+  <div class="row">
+    <!-- 06 Email -->
+    <div class="cell">
+      <div class="device"><div class="screen wash">
+        <div class="island"></div><div class="sb" data-sb></div>
+        <div class="form">
+          <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+          <h2 style="margin-top:22px">Sign up</h2>
+          <div class="sub">Add your email. We’ll send you<br/>a 4-digit code to confirm it’s you.</div>
+          <div class="field" style="margin-top:30px"><label>Email <b>*</b></label><div class="input"><i class="ico" data-i="mail" style="color:var(--muted)"></i>example@gmail.com</div></div>
+        </div>
+        <div class="nav">
+          <div><div class="rb"><i class="ico" data-i="chev-l"></i></div><div class="lbl">Back</div></div>
+          <div><div class="rb dark"><i class="ico" data-i="chev-r"></i></div><div class="lbl">Next</div></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">06</div><h3>Email</h3><p>Email is the only required field. Next sends the code.</p></div>
+    </div>
+
+    <!-- 07 Code -->
+    <div class="cell">
+      <div class="device"><div class="screen wash">
+        <div class="island"></div><div class="sb" data-sb></div>
+        <div class="form">
+          <div class="steps"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+          <h2 style="margin-top:22px">Confirmation</h2>
+          <div class="mailtile"><div class="t"><i class="ico" data-i="mail"></i></div><div><b>Check your email</b><span>We sent a code to joseph@gmail.com</span></div></div>
+          <div class="codebox"><div>4</div><div>7</div><div class="cur"></div><div></div></div>
+          <div class="sub" style="margin-top:20px">Didn’t get it? <span style="color:var(--c3);font-weight:500">Resend in 0:42</span></div>
+        </div>
+        <div class="nav">
+          <div><div class="rb"><i class="ico" data-i="chev-l"></i></div><div class="lbl">Back</div></div>
+          <div><div class="rb off"><i class="ico" data-i="chev-r"></i></div><div class="lbl">Next</div></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">07</div><h3>Code confirmation</h3><p>Next stays grey until all 4 digits are in, then it verifies and moves on by itself.</p></div>
+    </div>
+
+    <!-- 08 Welcome done -->
+    <div class="cell">
+      <div class="device"><div class="screen wash">
+        <div class="island"></div><div class="sb" data-sb></div>
+        <img class="shot" data-render="star3d" alt="" style="height:430px;top:40px" />
+        <div style="position:absolute;top:470px;left:24px;right:24px;text-align:center">
+          <h2 style="font-size:36px;font-weight:600;letter-spacing:-.03em;line-height:1.05">Welcome aboard,<br/>Joseph</h2>
+          <div style="font-size:14.5px;color:var(--ink2);margin-top:12px;line-height:1.45">Your 2.5-year mission profile is ready.<br/>Let’s look after you up there.</div>
+        </div>
+        <div style="position:absolute;left:24px;right:24px;bottom:42px"><div class="pill dark">Go to main page <i class="ico" data-i="arrow-r"></i></div></div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">08</div><h3>Welcome — 3D Astra star</h3><p>The copper Astra star spins in with a bounce and settles; small sparkles around it.</p></div>
+    </div>
+
+    <!-- 09 Main shell -->
+    <div class="cell">
+      <div class="device"><div class="screen">
+        <div class="island"></div><div class="sb" data-sb></div>
+        <div class="dhead">
+          <div style="display:flex;align-items:center;gap:6px"><div class="logo" data-logo="var(--ink)"></div><span class="reddot"></span></div>
+          <div class="datepill"><span class="c"><i class="ico" data-i="chev-l"></i></span><span class="t">Today</span><span class="c"><i class="ico" data-i="chev-r"></i></span></div>
+          <div class="batt">87%<span class="w ico" data-i="watch"></span></div>
+        </div>
+        <div class="placeholder">Main dashboard content<br/>— we decide this later —</div>
+        <div class="tabbar">
+          <div class="t on"><i class="ico" data-i="home"></i></div>
+          <div class="t"><i class="ico" data-i="dumbbell"></i></div>
+          <div class="t"><i class="ico" data-i="sparkles"></i></div>
+          <div class="t"><i class="ico" data-i="heart"></i></div>
+          <div class="t"><i class="ico" data-i="user"></i></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">09</div><h3>Main page — frame only</h3><p>Tabs: Home · Training · AI assistant (Gemini) · Body (3D) · Profile. WHOOP battery top right.</p><span class="q">What does the red dot next to “Astra” mean?</span></div>
+    </div>
+
+    <!-- 10 Log in -->
+    <div class="cell">
+      <div class="device"><div class="screen wash">
+        <div class="island"></div><div class="sb" data-sb></div>
+        <div class="form">
+          <div style="display:flex;justify-content:center"><div style="width:64px;height:64px;border-radius:20px;background:var(--copper);display:grid;place-items:center;box-shadow:0 14px 26px -12px rgba(120,60,30,.7)" data-logo-mark></div></div>
+          <h2 style="margin-top:18px">Log in</h2>
+          <div class="sub">Crew accounts are set up by your mission.<br/>Enter your email and we’ll send a code.</div>
+          <div class="field" style="margin-top:30px"><label>Email <b>*</b></label><div class="input focus" style="color:var(--ink)">j.brown@crew.astra<span class="caret"></span></div></div>
+        </div>
+        <div class="nav">
+          <div><div class="rb"><i class="ico" data-i="chev-l"></i></div><div class="lbl">Back</div></div>
+          <div><div class="rb dark"><i class="ico" data-i="chev-r"></i></div><div class="lbl">Send code</div></div>
+        </div>
+        <div class="home-ind"></div>
+      </div></div>
+      <div class="cap"><div class="n">10 · Log in path</div><h3>Crew log in</h3><p>Email, then the code screen (07), then straight to the main page.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ BOARD 2 · MISSION ROUTE ============================ -->
+<section class="board" id="mission">
+  <div class="board-head">
+    <div>
+      <h1>Mission length — <em>from the ship to its route</em></h1>
+      <p>Coming from the age screen, the camera pulls back from the drifting Orion until it becomes a marker on its route. As you drag the scale, the route stretches live. At each threshold the camera eases to a wider view and the craft swaps with a quick pop and a haptic tick: ISS → Orion → Mars transit ship → deep-space ship.</p>
+    </div>
+    <div class="legend"><span style="max-width:300px;font-size:15px;line-height:1.55">0.5–1 yr · Earth orbit<br/>1.5–2 yr · Moon<br/>2.5–4 yr · Mars round trip<br/>4.5–10 yr · Jupiter &amp; beyond</span></div>
+  </div>
+  <div class="row">
+    <div class="cell">
+      <div data-mission="T1" data-step="3"></div>
+      <div class="cap"><div class="n">0.0 s · enter</div><h3>Same ship as the age screen</h3><p>The Orion from screen 04 is still drifting. The question changes; the scale starts at 0.5.</p></div>
+    </div>
+    <div class="cell">
+      <div data-mission="T2" data-step="3"></div>
+      <div class="cap"><div class="n">0.3 – 1.0 s · pull back</div><h3>Camera pulls out</h3><p>The camera pulls back and tilts down. The ship shrinks, leaves a copper trail, and Earth slides into view.</p></div>
+    </div>
+    <div class="cell">
+      <div data-mission="A" data-step="3"></div>
+      <div class="cap"><div class="n">0.5 – 1 year</div><h3>Earth orbit · ISS</h3><p>The ship turns into the ISS, circling Earth on a glowing ring. More time = more laps drawn.</p></div>
+    </div>
+    <div class="cell">
+      <div data-mission="B" data-step="3"></div>
+      <div class="cap"><div class="n">1.5 – 2 years</div><h3>Moon · Orion</h3><p>The ring stretches into a figure-8 around the Moon. Orion travels along it.</p></div>
+    </div>
+    <div class="cell">
+      <div data-mission="C" data-step="3"></div>
+      <div class="cap"><div class="n">2.5 – 4 years</div><h3>Mars round trip</h3><p>Zoom out to the Sun. The route goes Earth → Mars and back (dotted). A bigger transit ship with a habitat module.</p></div>
+    </div>
+    <div class="cell">
+      <div data-mission="D" data-step="3"></div>
+      <div class="cap"><div class="n">4.5 – 10 years</div><h3>Deep space · Jupiter</h3><p>The route crosses the asteroid belt to Jupiter. A long ship with a spinning gravity ring.</p></div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ---------- mission screen template ---------- */
+const MISSION = {
+  T1:{r:'ageShip', planet:true, val:.5, num:'0.5', unit:'years', dest:null, marks:[]},
+  T2:{r:'mT', planet:false, val:.5, num:'0.5', unit:'years', dest:null, marks:[]},
+  A:{r:'mA', val:1, num:'1', unit:'year · Earth orbit', dest:'LOW EARTH ORBIT', marks:[['earth','Earth'],['ship','ISS']]},
+  B:{r:'mB', val:2, num:'2', unit:'years · Moon', dest:'MOON · GATEWAY', marks:[['earth','Earth'],['moon','Moon'],['ship','Orion']]},
+  C:{r:'mC', val:2.5, num:'2.5', unit:'years · Mars round trip', dest:'MARS ROUND TRIP', marks:[['sun','Sun'],['earth','Earth'],['mars','Mars'],['ship','Transit ship']]},
+  D:{r:'mD', val:7, num:'7', unit:'years · Deep space', dest:'JUPITER SYSTEM', marks:[['sun','Sun'],['earth','Earth'],['jup','Jupiter'],['ship','Deep-space ship']]},
+};
+document.querySelectorAll('[data-mission]').forEach(el=>{
+  const m = MISSION[el.dataset.mission], k = el.dataset.mission;
+  const steps = [1,1,1,0,0].map(o=>`<i class="${o?'on':''}"></i>`).join('');
+  el.outerHTML = `<div class="device"><div class="screen">
+    <div class="island"></div><div class="sb light" data-sb></div>
+    <div class="hero">
+      <div class="stars" data-stars="80"></div>
+      ${m.planet?'<div class="planet"></div>':''}
+      <img class="ship" data-render="${m.r}" alt="" />
+      ${m.marks.map(([id,t])=>`<div class="mk ${id==='ship'?'ship':''}" data-mark="${m.r}:${id}">${t}</div>`).join('')}
+      <div class="logo" data-logo="#fff"></div>
+      ${m.dest?`<div class="dest">${m.dest}</div>`:''}
+      <svg class="wave" viewBox="0 0 360 90" preserveAspectRatio="none" data-wave></svg>
+    </div>
+    <div class="lower"><div class="steps">${steps}</div><div class="q">How long is your mission?</div></div>
+    <svg class="dial" data-dial="0.5,10,${m.val},0.5"></svg>
+    <div class="nav">
+      <div class="rb"><i class="ico" data-i="chev-l"></i></div>
+      <div class="bignum"><b>${m.num}</b><span>${m.unit}</span></div>
+      <div class="rb dark"><i class="ico" data-i="chev-r"></i></div>
+    </div>
+    <div class="home-ind"></div>
+  </div></div>`;
+});
+
+/* ---------- icons ---------- */
+const P = {
+  'chev-l':'<path d="M15 18l-6-6 6-6"/>','chev-r':'<path d="M9 18l6-6-6-6"/>',
+  'arrow-r':'<path d="M5 12h14M13 6l6 6-6 6"/>','check':'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  'home':'<path d="M3.5 10.5L12 3.5l8.5 7V20a1 1 0 0 1-1 1H15v-6H9v6H4.5a1 1 0 0 1-1-1z"/>',
+  'dumbbell':'<path d="M6.5 6.5v11M17.5 6.5v11M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+  'sparkles':'<path d="M11 3.5l1.9 5.1L18 10.5l-5.1 1.9L11 17.5l-1.9-5.1L4 10.5l5.1-1.9z"/><path d="M18.5 15l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/>',
+  'heart':'<path d="M12 20s-7-4.4-9.1-8.6C1.3 8.1 3.4 4.5 7 4.5c2 0 3.3 1.1 5 3 1.7-1.9 3-3 5-3 3.6 0 5.7 3.6 4.1 6.9C19 15.6 12 20 12 20z"/>',
+  'user':'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  'mail':'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.8 7.2L12 13l8.2-5.8"/>',
+  'watch':'<rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6V3h6v3M9 18v3h6v-3"/>',
+  'play':'<path d="M8.5 5.5v13l10.5-6.5z" fill="currentColor"/>',
+  'volume':'<path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5M18 7a7 7 0 0 1 0 10"/>',
+};
+document.querySelectorAll('[data-i]').forEach(el=>{
+  el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${P[el.dataset.i]}</svg>`;
+});
+const STARP='M12 1.5C12.9 8 16 11.1 22.5 12 16 12.9 12.9 16 12 22.5 11.1 16 8 12.9 1.5 12 8 11.1 11.1 8 12 1.5Z';
+const STAR = f=>`<svg viewBox="0 0 24 24"><path fill="${f}" d="${STARP}"/></svg>`;
+const STARGRAD = `<svg viewBox="0 0 24 24"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E2AE8C"/><stop offset=".55" stop-color="#B06E4B"/><stop offset="1" stop-color="#6E3A23"/></linearGradient></defs><path fill="url(#sg)" d="${STARP}"/></svg>`;
+document.querySelectorAll('[data-logo]').forEach(el=>{
+  const c=el.dataset.logo; el.style.color=c;
+  el.innerHTML=(c==='var(--ink)'?STARGRAD:STAR('#fff'))+'<span>Astra</span>';
+});
+document.querySelectorAll('[data-logo-mark]').forEach(el=>{ el.innerHTML='<div style="width:30px;height:30px">'+STAR('#fff')+'</div>'; });
+
+document.querySelectorAll('[data-wave]').forEach(el=>{
+  el.innerHTML='<path d="M0 52 C 70 22, 130 78, 205 52 S 320 30, 360 48 L360 90 L0 90Z" fill="#F1EFEC"/><path d="M0 40 C 70 10, 130 66, 205 40 S 320 18, 360 36" fill="none" stroke="#E7B795" stroke-opacity=".7" stroke-width="1.2"/>';
+});
+document.querySelectorAll('[data-sb]').forEach(el=>{
+  el.innerHTML = `<span>9:41</span><span style="display:flex;gap:6px;align-items:center">
+  <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+  <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 11.5l2.4-2.6a3.4 3.4 0 0 0-4.8 0zM3.6 6.9a6.3 6.3 0 0 1 8.8 0l1.4-1.5a8.4 8.4 0 0 0-11.6 0zM.8 3.9a10.3 10.3 0 0 1 14.4 0L16.6 2.4a12.4 12.4 0 0 0-17.2 0z"/></svg>
+  <svg width="26" height="12" viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3.5" fill="none" stroke="currentColor" opacity=".45"/><rect x="2.2" y="2.2" width="17" height="7.6" rx="2" fill="currentColor"/><rect x="23.6" y="4" width="1.8" height="4" rx=".9" fill="currentColor" opacity=".45"/></svg></span>`;
+});
+let seed=7; const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+document.querySelectorAll('[data-stars]').forEach(el=>{
+  let h=''; for(let i=0;i<+el.dataset.stars;i++){const s=(rnd()*1.8+.6).toFixed(1); h+=`<i style="left:${(rnd()*100).toFixed(1)}%;top:${(rnd()*80).toFixed(1)}%;width:${s}px;height:${s}px;opacity:${(rnd()*.7+.2).toFixed(2)}"></i>`;}
+  el.innerHTML=h;
+});
+let dialN=0;
+document.querySelectorAll('[data-dial]').forEach(svg=>{
+  const [min,max,val,step]=svg.dataset.dial.split(',').map(Number); const id=dialN++;
+  svg.setAttribute('viewBox','0 0 360 170');
+  const cx=180,cy=360,r=300,a0=237*Math.PI/180,a1=303*Math.PI/180;
+  const pt=(a,rr)=>[cx+rr*Math.cos(a),cy+rr*Math.sin(a)];
+  const av=a0+(a1-a0)*(val-min)/(max-min); let h=''; const N=64;
+  for(let i=0;i<=N;i++){const a=a0+(a1-a0)*i/N,major=i%8===0;const[x1,y1]=pt(a,r+10),[x2,y2]=pt(a,r+(major?24:17));const op=Math.min(1,.15+Math.min(i,N-i)/N*3.2);
+    h+=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#1B1613" stroke-opacity="${(op*.5).toFixed(2)}" stroke-width="${major?1.6:1.1}" stroke-linecap="round"/>`;}
+  const[sx,sy]=pt(a0,r),[ex,ey]=pt(a1,r),[vx,vy]=pt(av,r);
+  h+=`<defs><linearGradient id="dg${id}" x1="0" x2="1"><stop offset="0" stop-color="#E2AE8C"/><stop offset="1" stop-color="#9A5B3C"/></linearGradient><filter id="ks${id}" x="-1" y="-1" width="3" height="3"><feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#5a2a12" flood-opacity=".35"/></filter></defs>`;
+  h+=`<path d="M${sx} ${sy} A${r} ${r} 0 0 1 ${ex} ${ey}" fill="none" stroke="#1B1613" stroke-opacity=".14" stroke-width="2"/>`;
+  h+=`<path d="M${sx} ${sy} A${r} ${r} 0 0 1 ${vx} ${vy}" fill="none" stroke="url(#dg${id})" stroke-width="3" stroke-linecap="round"/>`;
+  h+=`<circle cx="${vx}" cy="${vy}" r="11" fill="#fff" filter="url(#ks${id})"/><circle cx="${vx}" cy="${vy}" r="4" fill="#9A5B3C"/>`;
+  const[lx,ly]=pt(a0+.02,r-22),[rx,ry]=pt(a1-.02,r-22); const fmt=v=>step<1?(v+' yr'):v;
+  h+=`<text x="${lx}" y="${ly}" font-size="13" fill="#5E544D" font-family="Inter Tight">${fmt(min)}</text><text x="${rx}" y="${ry}" font-size="13" fill="#5E544D" text-anchor="end" font-family="Inter Tight">${fmt(max)}</text>`;
+  svg.innerHTML=h;
+});
+const b=new URLSearchParams(location.search).get('b');
+if(b==='flow') document.getElementById('mission').classList.add('hidden');
+if(b==='mission') document.getElementById('flow').classList.add('hidden');
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+
+const R=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});
+R.setPixelRatio(2); R.outputColorSpace=THREE.SRGBColorSpace; R.toneMapping=THREE.ACESFilmicToneMapping; R.toneMappingExposure=1.05;
+const ENV=new THREE.PMREMGenerator(R).fromScene(new RoomEnvironment(),0.04).texture;
+
+function lights(s){
+  s.add(new THREE.HemisphereLight(0xfff0e4,0x3a2318,.7));
+  const k=new THREE.DirectionalLight(0xffd6b8,3); k.position.set(5,6,7); s.add(k);
+  const r=new THREE.DirectionalLight(0xffb27a,2.2); r.position.set(-6,3,-5); s.add(r);
+  const f=new THREE.DirectionalLight(0xc9d4ff,.6); f.position.set(-4,-3,4); s.add(f);
+}
+const cv=(w,h,draw)=>{const c=document.createElement('canvas');c.width=w;c.height=h;draw(c.getContext('2d'));const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return t;};
+let s2=11; const r2=()=>(s2=(s2*16807)%2147483647)/2147483647;
+
+const TEX={
+  panel:()=>cv(256,192,g=>{g.fillStyle='#1a2236';g.fillRect(0,0,256,192);for(let x=0;x<8;x++)for(let y=0;y<6;y++){g.fillStyle=`hsl(225,35%,${14+((x+y)%2)*3}%)`;g.fillRect(x*32+2,y*32+2,28,28);}g.strokeStyle='#c9a37f';g.lineWidth=4;g.strokeRect(2,2,252,188);}),
+  earth:()=>cv(1024,512,g=>{const gr=g.createLinearGradient(0,0,0,512);gr.addColorStop(0,'#2b5a94');gr.addColorStop(.5,'#3b78bd');gr.addColorStop(1,'#2b5a94');g.fillStyle=gr;g.fillRect(0,0,1024,512);
+    for(let c=0;c<11;c++){const cx=r2()*1024,cy=90+r2()*330;for(let i=0;i<55;i++){g.fillStyle=['#6f8f4e','#869a59','#a58a5a','#7a8a4c'][i%4];g.beginPath();g.arc(cx+(r2()-.5)*190,cy+(r2()-.5)*120,8+r2()*26,0,7);g.fill();}}
+    g.fillStyle='#eef3f7';g.fillRect(0,0,1024,26);g.fillRect(0,486,1024,26);}),
+  clouds:()=>{const c=document.createElement('canvas');c.width=1024;c.height=512;const g=c.getContext('2d');for(let i=0;i<260;i++){g.fillStyle=`rgba(255,255,255,${.12+r2()*.25})`;g.beginPath();g.ellipse(r2()*1024,r2()*512,20+r2()*60,6+r2()*14,0,0,7);g.fill();}const t=new THREE.CanvasTexture(c);return t;},
+  moon:()=>cv(512,256,g=>{g.fillStyle='#bdb7b0';g.fillRect(0,0,512,256);for(let i=0;i<160;i++){g.fillStyle=`rgba(${r2()>.5?90:230},${r2()>.5?85:225},80,.25)`;g.beginPath();g.arc(r2()*512,r2()*256,2+r2()*14,0,7);g.fill();}}),
+  mars:()=>cv(512,256,g=>{g.fillStyle='#c4673c';g.fillRect(0,0,512,256);for(let i=0;i<120;i++){g.fillStyle=`rgba(${r2()>.5?120:230},${r2()>.5?50:140},40,.3)`;g.beginPath();g.arc(r2()*512,r2()*256,4+r2()*22,0,7);g.fill();}}),
+  jup:()=>cv(512,256,g=>{const cols=['#e9d7bd','#c99f74','#f1e3cc','#b07a52','#e2c8a6','#9c6a48','#ecd9bf'];let y=0;while(y<256){const h=8+r2()*22;g.fillStyle=cols[Math.floor(r2()*cols.length)];g.fillRect(0,y,512,h);y+=h;}g.fillStyle='#b5603c';g.beginPath();g.ellipse(330,160,26,12,0,0,7);g.fill();}),
+  glow:(rgb)=>cv(256,256,g=>{const gr=g.createRadialGradient(128,128,0,128,128,128);gr.addColorStop(0,`rgba(${rgb},1)`);gr.addColorStop(.25,`rgba(${rgb},.55)`);gr.addColorStop(1,`rgba(${rgb},0)`);g.fillStyle=gr;g.fillRect(0,0,256,256);}),
+};
+const M=(o)=>new THREE.MeshStandardMaterial(o);
+const mats=()=>({white:M({color:0xf0ece8,metalness:.25,roughness:.35}),silver:M({color:0xd8d2cc,metalness:.9,roughness:.22}),dark:M({color:0x2a201b,metalness:.4,roughness:.55}),foil:M({color:0xd29a64,metalness:1,roughness:.32}),panel:M({map:TEX.panel(),metalness:.55,roughness:.3})});
+const glow=(rgb,size,op=1)=>{const s=new THREE.Sprite(new THREE.SpriteMaterial({map:TEX.glow(rgb),depthWrite:false,transparent:true,opacity:op}));s.scale.setScalar(size);return s;};
+
+/* ---------- craft ---------- */
+function orion(){
+  const g=new THREE.Group(),m=mats();
+  const add=(geo,mat,y,rx=0)=>{const o=new THREE.Mesh(geo,mat);o.position.y=y;o.rotation.x=rx;g.add(o);return o;};
+  add(new THREE.CylinderGeometry(.44,1.02,1.0,96),m.white,.55);
+  add(new THREE.CylinderGeometry(.46,.46,.06,64),m.silver,1.08);
+  add(new THREE.CylinderGeometry(.3,.34,.24,48),m.silver,1.22);
+  add(new THREE.TorusGeometry(.3,.035,16,48),m.dark,1.35,Math.PI/2);
+  for(let i=0;i<4;i++){const a=i*Math.PI/2+.4,w=new THREE.Mesh(new THREE.BoxGeometry(.16,.13,.02),m.dark);w.position.set(Math.cos(a)*.62,.72,Math.sin(a)*.62);w.lookAt(Math.cos(a)*3,2.32,Math.sin(a)*3);g.add(w);}
+  add(new THREE.CylinderGeometry(1.04,1.0,.09,96),m.dark,.02);
+  add(new THREE.CylinderGeometry(.98,.9,.22,96),m.foil,-.13);
+  add(new THREE.CylinderGeometry(.9,.9,1.3,96),m.white,-.88);
+  add(new THREE.CylinderGeometry(.915,.915,.07,96),m.silver,-.42);
+  add(new THREE.CylinderGeometry(.915,.915,.07,96),m.silver,-1.3);
+  add(new THREE.CylinderGeometry(.9,.82,.28,96),m.foil,-1.66);
+  const nm=m.silver.clone();nm.side=THREE.DoubleSide; add(new THREE.CylinderGeometry(.2,.46,.62,48,1,true),nm,-2.1);
+  for(let k=0;k<4;k++){const w=new THREE.Group();w.rotation.y=k*Math.PI/2+Math.PI/4;w.position.y=-.9;
+    const bm=new THREE.Mesh(new THREE.CylinderGeometry(.035,.035,.45,12),m.silver);bm.rotation.z=Math.PI/2;bm.position.x=1.1;w.add(bm);
+    for(let i=0;i<3;i++){const p=new THREE.Mesh(new THREE.BoxGeometry(1.0,.025,.74),m.panel);p.position.x=1.84+i*1.04;p.rotation.x=.32;w.add(p);} g.add(w);}
+  return g;
+}
+function iss(){
+  const g=new THREE.Group(),m=mats();
+  const truss=new THREE.Mesh(new THREE.BoxGeometry(7,.2,.2),m.silver); g.add(truss);
+  for(const x of [-3.2,-2.5,2.5,3.2]) for(const z of [-1,1]){const p=new THREE.Mesh(new THREE.BoxGeometry(.5,.03,2.5),m.panel);p.position.set(x,0,z*1.4);g.add(p);}
+  for(const x of [-1.4,1.4]){const rd=new THREE.Mesh(new THREE.BoxGeometry(.9,.02,1.1),m.white);rd.position.set(x,-.15,-.9);g.add(rd);}
+  const mod=(l,x,z,rot)=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(.26,.26,l,32),m.white);c.position.set(x,-.35,z);c.rotation.set(rot?0:Math.PI/2,0,rot?Math.PI/2:0);g.add(c);};
+  mod(3.2,0,0,false); mod(1.6,0,1.2,true); mod(1.2,0,-1.3,true);
+  return g;
+}
+function marsShip(){
+  const g=new THREE.Group(),m=mats();
+  const o=orion(); o.scale.setScalar(.5); o.position.y=2.7; g.add(o);
+  const hab=new THREE.Mesh(new THREE.CylinderGeometry(.7,.7,2.6,64),m.white); hab.position.y=.6; g.add(hab);
+  for(const y of [-.3,.6,1.5]){const b=new THREE.Mesh(new THREE.CylinderGeometry(.715,.715,.1,64),m.foil);b.position.y=y;g.add(b);}
+  const tr=new THREE.Mesh(new THREE.BoxGeometry(.3,2.2,.3),m.silver); tr.position.y=-1.8; g.add(tr);
+  const tank=new THREE.Mesh(new THREE.SphereGeometry(.55,32,32),m.foil); tank.position.y=-2.9; g.add(tank);
+  for(const s of [-1,1]){const w=new THREE.Mesh(new THREE.BoxGeometry(3.6,.03,1.1),m.panel);w.position.set(s*2.0,-1.6,0);g.add(w);}
+  return g;
+}
+function deepShip(){
+  const g=new THREE.Group(),m=mats();
+  const sp=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,6.5,24),m.silver); g.add(sp);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(1.8,.24,24,96),m.white); ring.rotation.x=Math.PI/2; ring.position.y=1.4; g.add(ring);
+  for(let i=0;i<4;i++){const s=new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,3.6,8),m.silver);s.rotation.z=Math.PI/2;s.rotation.y=i*Math.PI/4;s.position.y=1.4;g.add(s);}
+  const o=orion(); o.scale.setScalar(.45); o.position.y=3.6; g.add(o);
+  for(const s of [-1,1]){const rd=new THREE.Mesh(new THREE.BoxGeometry(2.4,.03,.9),m.foil);rd.position.set(s*1.3,-2.2,0);rd.rotation.z=s*.35;g.add(rd);}
+  const eng=new THREE.Mesh(new THREE.CylinderGeometry(.3,.6,.7,32),m.dark); eng.position.y=-3.5; g.add(eng);
+  const fl=glow('255,190,140',2.2,.8); fl.position.y=-4.1; g.add(fl);
+  return g;
+}
+function helmet(){
+  const g=new THREE.Group();
+  const shell=new THREE.Mesh(new THREE.SphereGeometry(1,96,96),M({color:0xf2eeea,roughness:.42,metalness:.05})); g.add(shell);
+  const ps=Math.PI/2-.95, pl=1.9, ts=.7, tl=1.25;
+  const rim=new THREE.Mesh(new THREE.SphereGeometry(1.012,96,96,ps-.08,pl+.16,ts-.08,tl+.16),M({color:0xb9b1aa,metalness:.7,roughness:.3})); g.add(rim);
+  const visor=new THREE.Mesh(new THREE.SphereGeometry(1.028,96,96,ps,pl,ts,tl),new THREE.MeshPhysicalMaterial({color:0xd38d5d,metalness:1,roughness:.06,clearcoat:1,clearcoatRoughness:.05,side:THREE.DoubleSide})); g.add(visor);
+  const neck=new THREE.Mesh(new THREE.CylinderGeometry(.66,.72,.28,64),M({color:0xe9e4df,roughness:.5})); neck.position.y=-.98; g.add(neck);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.7,.07,24,96),M({color:0xcfc8c1,metalness:.9,roughness:.25})); ring.rotation.x=Math.PI/2; ring.position.y=-.86; g.add(ring);
+  for(const s of [-1,1]){
+    const lamp=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.26,32),M({color:0xe8e3de,roughness:.4})); lamp.rotation.z=Math.PI/2; lamp.position.set(s*1.0,.32,.12); g.add(lamp);
+    const lens=new THREE.Mesh(new THREE.CircleGeometry(.1,32),new THREE.MeshBasicMaterial({color:0xfff3e0})); lens.position.set(s*1.0,.32,.26); g.add(lens);
+  }
+  const stripe=new THREE.Mesh(new THREE.TorusGeometry(1.004,.02,8,128,Math.PI),M({color:0xc4855c,metalness:.9,roughness:.3})); stripe.rotation.y=Math.PI/2; stripe.rotation.z=0; g.add(stripe);
+  return g;
+}
+function star3d(){
+  const sh=new THREE.Shape(); sh.moveTo(0,1.6); sh.quadraticCurveTo(.16,.16,1.6,0); sh.quadraticCurveTo(.16,-.16,0,-1.6); sh.quadraticCurveTo(-.16,-.16,-1.6,0); sh.quadraticCurveTo(-.16,.16,0,1.6);
+  const geo=new THREE.ExtrudeGeometry(sh,{depth:.3,bevelEnabled:true,bevelThickness:.14,bevelSize:.08,bevelSegments:8,curveSegments:48}); geo.center();
+  const g=new THREE.Group(); g.add(new THREE.Mesh(geo,new THREE.MeshPhysicalMaterial({color:0xcf8c60,metalness:1,roughness:.16,clearcoat:.6})));
+  for(const [x,y,s] of [[1.7,1.3,.35],[-1.6,-1.2,.25],[-1.5,1.5,.18],[1.4,-1.6,.2]]){const sp=new THREE.Mesh(new THREE.ExtrudeGeometry(sh,{depth:.05,bevelEnabled:false}),M({color:0xe6b08a,metalness:.9,roughness:.25}));sp.scale.setScalar(s*.5);sp.position.set(x,y,.2);g.add(sp);}
+  return g;
+}
+
+/* ---------- space helpers ---------- */
+const ringXZ=(r,col=0xffffff,op=.28,rad=.008)=>{const t=new THREE.Mesh(new THREE.TorusGeometry(r,rad,6,300),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:op}));t.rotation.x=Math.PI/2;return t;};
+const onXZ=(r,deg)=>V(r*Math.cos(deg*Math.PI/180),0,-r*Math.sin(deg*Math.PI/180));
+const planet=(tex,r)=>new THREE.Mesh(new THREE.SphereGeometry(r,64,64),M({map:tex,roughness:.85}));
+const tube=(pts,col,rad,closed=false,op=1)=>new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts,closed),400,rad,8,closed),new THREE.MeshBasicMaterial({color:col,transparent:op<1,opacity:op}));
+const dots=(pts,col,r=.02,every=6)=>{const g=new THREE.Group();pts.forEach((p,i)=>{if(i%every)return;const d=new THREE.Mesh(new THREE.SphereGeometry(r,10,10),new THREE.MeshBasicMaterial({color:col,transparent:true,opacity:.75}));d.position.copy(p);g.add(d);});return g;};
+const hohmann=(r1,r2,baseDeg,t0,t1,n=120)=>{const a=(r1+r2)/2,e=(r2-r1)/(r2+r1),pts=[];for(let i=0;i<=n;i++){const th=t0+(t1-t0)*i/n,r=a*(1-e*e)/(1+e*Math.cos(th));pts.push(onXZ(r,baseDeg+th*180/Math.PI));}return pts;};
+const alignShip=(ship,curvePts,t)=>{const c=new THREE.CatmullRomCurve3(curvePts);const p=c.getPointAt(t),tg=c.getTangentAt(t);ship.position.copy(p);ship.quaternion.setFromUnitVectors(V(0,1,0),tg.normalize());return p;};
+const sun=(r)=>{const g=new THREE.Group();g.add(new THREE.Mesh(new THREE.SphereGeometry(r,48,48),new THREE.MeshBasicMaterial({color:0xffe2b8})));g.add(glow('255,190,120',r*7,.9));g.add(glow('255,230,190',r*3,1));return g;};
+function spaceLights(s,sunPos=V(0,0,0)){s.add(new THREE.AmbientLight(0xffe6d2,.35));const p=new THREE.PointLight(0xffe0c0,60,0,1.6);p.position.copy(sunPos);s.add(p);const d=new THREE.DirectionalLight(0xffd6b8,1.4);d.position.set(3,5,4);s.add(d);}
+
+/* ---------- shots ---------- */
+function shot(build,w,h,{fov=30,pos=[0,1,14],target=[0,0,0],space=false}={}){
+  const s=new THREE.Scene(); s.environment=ENV; const marks={};
+  const obj=build(marks); s.add(obj); if(!space) lights(s); else spaceLights(s, obj.userData.sunPos);
+  const cam=new THREE.PerspectiveCamera(fov,w/h,.1,300); cam.position.set(...pos); cam.lookAt(...target);
+  R.setSize(w,h,false); R.render(s,cam); s.updateMatrixWorld(true);
+  const out={};
+  for(const [k,v] of Object.entries(marks)){const p=(v.isObject3D?v.getWorldPosition(V()):v.clone()).project(cam);out[k]=[(p.x+1)/2*w,(1-p.y)/2*h];}
+  return {url:R.domElement.toDataURL('image/png'),marks:out};
+}
+const ship=(rx,ry,rz,sc=1,x=0,y=0)=>()=>{const o=orion();o.rotation.set(rx,ry,rz);o.scale.setScalar(sc);o.position.set(x,y,0);return o;};
+
+const renders={
+  helmet1:()=>shot(()=>{const h=helmet();h.rotation.set(.12,-.5,.06);h.position.y=1.0;return h;},360,780,{fov:34,pos:[0,0,9]}),
+  helmet2:()=>shot(()=>{const h=helmet();h.rotation.set(.18,-.25,-.04);h.scale.setScalar(.8);h.position.y=1.45;return h;},360,780,{fov:34,pos:[0,0,9]}),
+  star3d:()=>shot(()=>{const s=star3d();s.rotation.set(.18,.55,.05);return s;},360,430,{fov:30,pos:[0,0,10]}),
+  ageShip:()=>shot(ship(.4,.9,-.55,1,.3,.6),360,440,{fov:30,pos:[0,0,19]}),
+  // transition: pulling back, Earth appears
+  mT:()=>shot(()=>{const g=new THREE.Group();
+      const e=planet(TEX.earth(),3.2); e.position.set(-2.6,-4.6,-3); e.rotation.set(.4,1.2,0); g.add(e);
+      const cl=new THREE.Mesh(new THREE.SphereGeometry(3.24,64,64),new THREE.MeshStandardMaterial({map:TEX.clouds(),transparent:true,depthWrite:false})); cl.position.copy(e.position); g.add(cl);
+      const at=glow('140,180,255',8.4,.55); at.position.copy(e.position); g.add(at);
+      const o=orion(); o.scale.setScalar(.42); o.rotation.set(.6,.9,-.9); o.position.set(.9,1.0,0); g.add(o);
+      g.add(tube([V(-3.5,-1.6,-1),V(-1.6,-.3,-.4),V(0,.6,0),V(.75,.95,0)],0xe7a679,.03,false,.9));
+      return g;},360,440,{fov:34,pos:[0,0,11]}),
+  // A — Earth orbit
+  mA:()=>shot((mk)=>{const g=new THREE.Group();
+      const e=planet(TEX.earth(),1.45); e.rotation.set(.25,2.4,0); g.add(e); mk.earth=V(-.9,1.2,0);
+      const cl=new THREE.Mesh(new THREE.SphereGeometry(1.48,64,64),new THREE.MeshStandardMaterial({map:TEX.clouds(),transparent:true,depthWrite:false})); g.add(cl);
+      g.add(glow('140,180,255',4.2,.6));
+      const piv=new THREE.Group(); piv.rotation.set(1.2,0,.35); g.add(piv);
+      const rr=2.25; piv.add(new THREE.Mesh(new THREE.TorusGeometry(rr,.016,8,300),new THREE.MeshBasicMaterial({color:0xe7a679})));
+      piv.add(new THREE.Mesh(new THREE.TorusGeometry(rr+.08,.006,8,300),new THREE.MeshBasicMaterial({color:0xe7a679,transparent:true,opacity:.4})));
+      const st=iss(); st.scale.setScalar(.085); const a=1.9; st.position.set(rr*Math.cos(a),rr*Math.sin(a),0); st.rotation.set(.3,.4,a); piv.add(st); mk.ship=st;
+      const h=glow('255,210,170',.7,.8); h.position.copy(st.position); piv.add(h);
+      g.userData.sunPos=V(6,4,6); return g;},360,440,{fov:34,pos:[0,.6,8.4],target:[0,.25,0],space:true}),
+  // B — Moon figure-8
+  mB:()=>shot((mk)=>{const g=new THREE.Group();
+      const e=planet(TEX.earth(),.58); e.position.set(-1.45,0,0); e.rotation.y=2; g.add(e); const ea=glow('140,180,255',1.7,.5); ea.position.copy(e.position); g.add(ea); mk.earth=V(-1.45,.62,0);
+      const mo=planet(TEX.moon(),.22); mo.position.set(1.75,0,0); g.add(mo); mk.moon=V(1.75,.24,0);
+      const pts=[V(-1.0,0,-.62),V(0,0,-.03),V(1.6,0,.52),V(2.55,0,.55),V(2.85,0,0),V(2.55,0,-.55),V(1.6,0,-.52),V(0,0,.03),V(-1.0,0,.62),V(-1.95,0,.98),V(-2.95,0,.35),V(-2.95,0,-.35),V(-1.95,0,-.98)].map(v=>V(v.x*.76,0,v.z*.8));
+      g.add(tube(pts,0xe7a679,.022,true));
+      const c=new THREE.CatmullRomCurve3(pts,true); const t=.16, p=c.getPointAt(t), tg=c.getTangentAt(t);
+      const o=orion(); o.scale.setScalar(.13); o.position.copy(p); o.quaternion.setFromUnitVectors(V(0,1,0),tg.normalize()); g.add(o); mk.ship=p.clone().add(V(0,.25,0));
+      const h=glow('255,210,170',.6,.8); h.position.copy(p); g.add(h);
+      g.userData.sunPos=V(-8,6,6); return g;},360,440,{fov:44,pos:[0,4.6,6.0],target:[0,0,0],space:true}),
+  // C — Mars round trip
+  mC:()=>shot((mk)=>{const g=new THREE.Group();
+      g.add(sun(.32)); mk.sun=V(0,.35,0);
+      g.add(ringXZ(1.25)); g.add(ringXZ(2.0));
+      const eP=onXZ(1.25,250), mP=onXZ(2.0,70);
+      const e=planet(TEX.earth(),.14); e.position.copy(eP); g.add(e); const eg=glow('140,180,255',.5,.6); eg.position.copy(eP); g.add(eg); mk.earth=eP.clone().add(V(0,.12,0));
+      const m=planet(TEX.mars(),.11); m.position.copy(mP); g.add(m); mk.mars=mP.clone().add(V(0,.1,0));
+      const out=hohmann(1.25,2.0,250,0,Math.PI); g.add(tube(out,0xe7a679,.018));
+      const back=hohmann(1.25,2.0,-75,Math.PI,2*Math.PI); g.add(dots(back,0xe7a679,.016,4));
+      const s=marsShip(); s.scale.setScalar(.075); const p=alignShip(s,out,.42); g.add(s); mk.ship=p.clone().add(V(0,.2,0));
+      const h=glow('255,210,170',.55,.8); h.position.copy(p); g.add(h);
+      g.userData.sunPos=V(0,0,0); return g;},360,440,{fov:42,pos:[0,5.4,3.3],target:[0,0,-.45],space:true}),
+  // D — Deep space / Jupiter
+  mD:()=>shot((mk)=>{const g=new THREE.Group();
+      g.add(sun(.26)); mk.sun=V(0,.3,0);
+      g.add(ringXZ(.8)); g.add(ringXZ(1.2)); g.add(ringXZ(2.75,0xffffff,.22));
+      const pos=[];for(let i=0;i<900;i++){const r=1.55+r2()*.4,a=r2()*Math.PI*2;pos.push(r*Math.cos(a),(r2()-.5)*.06,r*Math.sin(a));}
+      const bg=new THREE.BufferGeometry();bg.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));
+      g.add(new THREE.Points(bg,new THREE.PointsMaterial({color:0xd9c3b0,size:.022,transparent:true,opacity:.7})));
+      const eP=onXZ(.8,255), jP=onXZ(2.75,72);
+      const e=planet(TEX.earth(),.1); e.position.copy(eP); g.add(e); mk.earth=eP.clone().add(V(0,.1,0));
+      const mars=planet(TEX.mars(),.07); mars.position.copy(onXZ(1.2,150)); g.add(mars);
+      const j=planet(TEX.jup(),.28); j.position.copy(jP); j.rotation.z=.1; g.add(j); mk.jup=jP.clone().add(V(0,.28,0));
+      const out=hohmann(.8,2.75,255,0,Math.PI); g.add(tube(out,0xe7a679,.02));
+      const s=deepShip(); s.scale.setScalar(.06); const p=alignShip(s,out,.55); g.add(s); mk.ship=p.clone().add(V(0,.22,0));
+      const h=glow('255,210,170',.6,.8); h.position.copy(p); g.add(h);
+      g.userData.sunPos=V(0,0,0); return g;},360,440,{fov:44,pos:[0,6.4,3.0],target:[0,0,-1.15],space:true}),
+};
+
+const cache={};
+const get=k=>cache[k]??=renders[k]();
+document.querySelectorAll('[data-render]').forEach(img=>{ img.src=get(img.dataset.render).url; });
+document.querySelectorAll('[data-mark]').forEach(el=>{
+  const [k,id]=el.dataset.mark.split(':'); const p=get(k).marks[id]; if(!p) return;
+  el.style.left=p[0]+'px'; el.style.top=p[1]+'px';
+});
+document.body.dataset.ready='1';
+</script>
+</body>
+</html>

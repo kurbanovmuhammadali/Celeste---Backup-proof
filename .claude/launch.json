@@ -1,0 +1,35 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "api",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "server",
+        "run",
+        "dev"
+      ],
+      "port": 4000
+    },
+    {
+      "name": "web",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "mobile",
+        "run",
+        "web"
+      ],
+      "port": 8082
+    },
+    {
+      "name": "ad",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "docs/ad/serve.mjs"
+      ],
+      "port": 8090
+    }
+  ]
+}

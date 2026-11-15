@@ -1,0 +1,12 @@
+# Caddy gets and renews the https certificate by itself (Let's Encrypt). WebSockets (calls, alerts, live video) work without extra settings.
+celestasoft.health {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:4000
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+}
+www.celestasoft.health {
+	redir https://celestasoft.health{uri} permanent
+}
